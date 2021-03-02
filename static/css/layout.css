@@ -88,7 +88,7 @@ align-items: center;
 }
 
 li a:hover{
-background-color:#ab0e34 ;
+/*background-color:#ab0e34 ;*/
 padding:20px;
 border-radius: 25px;
 color: white;
