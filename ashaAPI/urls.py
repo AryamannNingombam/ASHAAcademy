@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from . import views
 urlpatterns = [
-   path('get_image/<int:sno>',views.getAllCarouselImages,name='all_images')
+   path('getCarouselImage/<int:sno>/',views.getAllCarouselImages,name='all_images'),
+   path('testApi/',views.testRequest,name = 'test')
 ]
 

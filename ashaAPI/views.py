@@ -14,3 +14,15 @@ def getAllCarouselImages(request,sno):
     return JsonResponse({
         "success" : False
     })
+
+
+def testRequest(request):
+    if (request.method == 'GET'):
+        return JsonResponse({
+            "success" : True,
+            "passingExam?" : False
+        })
+    return JsonResponse({
+        "success" : True,
+        'passingExam?' : False
+    })
