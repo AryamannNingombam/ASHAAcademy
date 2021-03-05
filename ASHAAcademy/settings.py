@@ -90,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ASHA_ACADEMY_DATABASE',
         'USER' : 'postgres',
-        'PASSWORD' : 'ProDestroyer15',
+        'PASSWORD' : '',
         'HOST' : 'localhost',
         'PORT' : '5432'        
     }
