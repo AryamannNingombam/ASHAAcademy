@@ -26,7 +26,7 @@ SECRET_KEY = '+qcshx5o(w*nxanzjfbnaqf5o)c&-d5uw381k!xxj(be%=(h5k'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    
+    'http://localhost:3000/',
     '127.0.0.1',
 ]
 
@@ -90,11 +90,21 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ASHA_ACADEMY_DATABASE',
         'USER' : 'postgres',
-        'PASSWORD' : '',
+        'PASSWORD' : os.environ.get('ASHA_ACADEMY_DATABASE_PASSWORD'),
         'HOST' : 'localhost',
         'PORT' : '5432'        
     }
 }
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 
 
 # Password validation
