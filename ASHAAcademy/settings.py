@@ -26,7 +26,7 @@ SECRET_KEY = '+qcshx5o(w*nxanzjfbnaqf5o)c&-d5uw381k!xxj(be%=(h5k'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost:3000/',
+    
     '127.0.0.1',
 ]
 
@@ -58,6 +58,7 @@ MIDDLEWARE = [
 ]
 CORS_ORIGIN_ALLOW_ALL = True
 
+
 ROOT_URLCONF = 'ASHAAcademy.urls'
 
 TEMPLATES = [
@@ -86,8 +87,12 @@ WSGI_APPLICATION = 'ASHAAcademy.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ASHA_ACADEMY_DATABASE',
+        'USER' : 'postgres',
+        'PASSWORD' : 'ProDestroyer15',
+        'HOST' : 'localhost',
+        'PORT' : '5432'        
     }
 }
 
