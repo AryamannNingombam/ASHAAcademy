@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-'ashaApp',
     'ashaAPI',
     'rest_framework',
     'django.contrib.messages',

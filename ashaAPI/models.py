@@ -19,6 +19,8 @@ class CarouselImage(models.Model):
 class TeacherCard(models.Model):
     sno = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100,blank=False,default='')
+    facultySubject = models.CharField(max_length=50,blank=True,default='')
+    isInManagement = models.BooleanField(default=False,blank=True)
     description = models.TextField(blank=False)
     qualifications =  models.TextField(blank=False)
 
