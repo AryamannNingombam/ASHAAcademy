@@ -3,13 +3,15 @@ from .models import CarouselImage
 from .serializers import CarouselImageSerializer
 from django.http import JsonResponse
 
-def getAllCarouselImages(request,sno):
+def getAllCarouselImages(request):
     if (request.method == 'GET'):
-        image = CarouselImage.objects.get(sno=sno)
-        # ser = CarouselImageSerializer(image,many=True)
+        images = CarouselImage.objects.all()
+        result = []
+        for image in images:
+            result.append(image.image.url)
         return JsonResponse({
             "success" : True,
-            "url" : image.image.url
+            "urls" : str(result)
         })
     return JsonResponse({
         "success" : False
