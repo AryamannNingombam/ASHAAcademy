@@ -6,12 +6,16 @@ from django.http import JsonResponse
 def getAllCarouselImages(request):
     if (request.method == 'GET'):
         images = CarouselImage.objects.all()
-        result = []
+        result = ""
         for image in images:
-            result.append(image.image.url)
+
+            result += image.image.url +','
+            
+            
+
         return JsonResponse({
             "success" : True,
-            "urls" : str(result)
+            "urls" : str(result[:len(result)-1])
         })
     return JsonResponse({
         "success" : False
