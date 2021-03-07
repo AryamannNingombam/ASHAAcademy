@@ -6,10 +6,11 @@ admin.site.register((CarouselImage,TeacherImage))
 
 
 
+
 @admin.register(TeacherCard)
 class DescriptionAdminMCE(admin.ModelAdmin):
     class Media:
         js = ('/static/scripts/TinyMCE.js',)
+    list_display = ('sno','name','facultySubject','isInManagement')
 
-        
     
