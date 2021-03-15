@@ -36,3 +36,10 @@ class TeacherImage(models.Model):
 
     def __str__(self):
         return self.teacher.name
+
+
+class ContactRequest(models.Model):
+    sno = models.AutoField(primary_key=True)
+    email = models.EmailField(blank=False)
+    phoneNumber = models.IntegerField(blank=False)
+    message = models.TextField(blank=False,default='')
