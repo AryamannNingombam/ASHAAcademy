@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from .models import CarouselImage
-from .serializers import CarouselImageSerializer
+from .models import CarouselImage,TeacherCard
+from .serializers import TeacherCardSerializer
 from django.http import JsonResponse
+from rest_framework.response import Response
 from django import forms
 
 
@@ -46,3 +47,11 @@ def testRequest(request):
         "success" : True,
         'passingExam?' : False
     })
+
+
+def getAllTeachersData(request):
+    allTeachers = TeacherCard.objects.all()
+    ser = TeacherCard(data=allTeachers,many=True)
+    return Response(ser.data)
+
+

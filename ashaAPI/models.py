@@ -15,6 +15,13 @@ class CarouselImage(models.Model):
 
 
 
+class TeacherImage(models.Model):
+    sno = models.AutoField(primary_key=True)
+    image = models.ImageField(blank=False,upload_to='TeacherImages/')
+
+    def __str__(self):
+        return self.teacher.name
+
 
 class TeacherCard(models.Model):
     sno = models.AutoField(primary_key=True)
@@ -23,23 +30,30 @@ class TeacherCard(models.Model):
     isInManagement = models.BooleanField(default=False,blank=True)
     description = models.TextField(blank=False)
     qualifications =  models.TextField(blank=False)
+    teacherImage = models.OneToOneField(TeacherImage,on_delete=models.CASCADE,blank=True,default=None)
 
     def __str__(self):
         return self.name
     
 
-class TeacherImage(models.Model):
-    sno = models.AutoField(primary_key=True)
-    teacher = models.OneToOneField(TeacherCard,on_delete=models.CASCADE)
-    image = models.ImageField(blank=False,upload_to='TeacherImages/')
-
-
-    def __str__(self):
-        return self.teacher.name
-
 
 class ContactRequest(models.Model):
     sno = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100,blank=False,default='')
     email = models.EmailField(blank=False)
     phoneNumber = models.IntegerField(blank=False)
     message = models.TextField(blank=False,default='')
+
+
+class CVSubmission(models.Model):
+    sno = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100,blank=False,default='')
+    email = models.EmailField(blank=False)
+    phoneNumber = models.IntegerField(blank=False)
+    fileSubmission = models.FileField(blank=False,upload_to='CVSubmissions/')
+
+
+
+
+
+    
