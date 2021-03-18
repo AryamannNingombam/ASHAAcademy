@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import CarouselImage,TeacherCard,TeacherImage,ContactRequest,CVSubmission
+from .models import CarouselImage,TeacherCard,ContactRequest,CVSubmission,Subject
 # Register your models here.
-admin.site.register((CarouselImage,TeacherImage,ContactRequest))
+admin.site.register((CarouselImage,ContactRequest,Subject))
 
 
 

@@ -3,7 +3,12 @@ from django.db import models
 
 # Create your models here.
 
+class Subject(models.Model):
+    sno = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.name
 
 class CarouselImage(models.Model):
     sno = models.AutoField(primary_key=True)
@@ -15,22 +20,16 @@ class CarouselImage(models.Model):
 
 
 
-class TeacherImage(models.Model):
-    sno = models.AutoField(primary_key=True)
-    image = models.ImageField(blank=False,upload_to='TeacherImages/')
-
-    def __str__(self):
-        return self.teacher.name
 
 
 class TeacherCard(models.Model):
     sno = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100,blank=False,default='')
-    facultySubject = models.CharField(max_length=50,blank=True,default='')
+    facultySubject = models.ForeignKey(Subject,null=True,on_delete=models.CASCADE)
     isInManagement = models.BooleanField(default=False,blank=True)
     description = models.TextField(blank=False)
     qualifications =  models.TextField(blank=False)
-    teacherImage = models.OneToOneField(TeacherImage,on_delete=models.CASCADE,blank=True,default=None)
+    teacherImage = models.ImageField(blank=False,upload_to='TeacherImages/')
 
     def __str__(self):
         return self.name

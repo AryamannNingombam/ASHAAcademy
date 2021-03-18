@@ -55,3 +55,21 @@ def getAllTeachersData(request):
     return Response(ser.data)
 
 
+
+def getAllTeachers(request):
+    if (request.method == 'GET'):
+        allTeachers = TeacherCard.objects.all()
+        finalResult = {'success' : True,'numberOfTeachers' : len(allTeachers)}
+        index=1
+        for teacher in allTeachers:
+            finalResult[str(index)] = {
+            'success' : True,
+            'name' : teacher.name,
+            'facultySubject': teacher.facultySubject.name,
+'isInManagement': teacher.isInManagement,
+'description':teacher.description,
+'qualifications':teacher.qualifications,
+'teacherImage':teacher.teacherImage.url
+        }
+            index+=1
+        return JsonResponse(finalResult)
