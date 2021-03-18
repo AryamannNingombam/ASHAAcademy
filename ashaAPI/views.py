@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import CarouselImage,TeacherCard
-from .serializers import TeacherCardSerializer
+from .serializers import TeacherCardSerializer,ContactFormSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
 from django import forms
@@ -73,3 +73,18 @@ def getAllTeachers(request):
         }
             index+=1
         return JsonResponse(finalResult)
+
+
+
+def submitContactForm(request):
+    if (request.method == 'POST'):
+        ser = ContactFormSerializer(data=request.data)
+        if (ser.is_valid()):
+            ser.save()
+        return JsonResponse({
+            'success' : True
+        })
+
+    return JsonResponse({
+        'success' : False
+    })
