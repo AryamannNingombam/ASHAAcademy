@@ -26,12 +26,19 @@ SECRET_KEY = '+qcshx5o(w*nxanzjfbnaqf5o)c&-d5uw381k!xxj(be%=(h5k'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'http://localhost:3000/',
-    '127.0.0.1',
-
+  '127.0.0.1:8000/',
+  '127.0.0.1:5500/',
+  'localhost:300/',
+  
 ]
+CORS_ORIGIN_WHITELIST = (
+        '127.0.0.1:8000/',
+        '127.0.0.1:5500/',
+       'localhost:300/',
 
+)
 
+CORS_ORIGIN_ALLOW_ALL = False
 # Application definition
 
 INSTALLED_APPS = [
