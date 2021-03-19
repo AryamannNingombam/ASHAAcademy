@@ -77,7 +77,9 @@ def getAllTeachers(request):
 
 
 def submitContactForm(request):
+    print("Post method called!")
     if (request.method == 'POST'):
+        
         ser = ContactFormSerializer(data=request.data)
         if (ser.is_valid()):
             ser.save()
