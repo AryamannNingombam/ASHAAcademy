@@ -50,7 +50,7 @@ class CVSubmission(models.Model):
     email = models.EmailField(blank=False)
     phoneNumber = models.IntegerField(blank=False)
     fileSubmission = models.FileField(blank=False,upload_to='CVSubmissions/')
-
+    message = models.TextField(blank=True,null=True,default='')
 
 
 

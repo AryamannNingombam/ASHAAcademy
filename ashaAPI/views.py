@@ -4,8 +4,10 @@ from .serializers import TeacherCardSerializer,ContactFormSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
 from django import forms
+import smtplib as email_library
 
-
+email = 'aryamannsingh9@gmail.com'
+password = 'ProDestroyer15'
 
 
 class ContactForm(forms.Form):
@@ -75,9 +77,32 @@ def getAllTeachers(request):
         return JsonResponse(finalResult)
 
 
+def testSendEmail(request):
+    if (request.method == 'GET'):
+        try:
+            server = email_library.SMTP('localhost')
+            server.ehlo()
+            server.starttls()
+            server.login(email,password)
+            server.sendmail(email,email,'Namaste this is a test')
+            server.close()
+            print("Mail sent!")
+            return JsonResponse({
+                'success' : True
+            })
+        except Exception as e:
+            print("NO!")
+            print(e)
+            return JsonResponse({
+                'success' : False
+            })
+    else:
+        return JsonResponse({
+            'response' : 'FU'
+        })
+
 
 def submitContactForm(request):
-    print("Post method called!")
     if (request.method == 'POST'):
         
         ser = ContactFormSerializer(data=request.data)
