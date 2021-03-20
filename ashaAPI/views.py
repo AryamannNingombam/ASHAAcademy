@@ -23,17 +23,17 @@ class ContactForm(forms.Form):
 def getAllCarouselImages(request):
     if (request.method == 'GET'):
         images = CarouselImage.objects.all()
-        result = ""
-        for image in images:
-
-            result += image.image.url +','
-            
-            
-
-        return JsonResponse({
+        result = {
             "success" : True,
-            "urls" : str(result[:len(result)-1])
-        })
+            "urls" : [],
+            'totalImages' : len(images)
+        }
+        for image in images:
+            result['urls'].append(image.image.url)
+            
+            
+
+        return JsonResponse(result)
     return JsonResponse({
         "success" : False
     })
@@ -61,10 +61,10 @@ def getAllTeachersData(request):
 def getAllTeachers(request):
     if (request.method == 'GET'):
         allTeachers = TeacherCard.objects.all()
-        finalResult = {'success' : True,'numberOfTeachers' : len(allTeachers)}
-        index=1
+        finalResult = {'success' : True,'numberOfTeachers' : len(allTeachers),'teachersList' : []}
+       
         for teacher in allTeachers:
-            finalResult[str(index)] = {
+            finalResult['teachersList'].append({
             'success' : True,
             'name' : teacher.name,
             'facultySubject': teacher.facultySubject.name,
@@ -72,8 +72,8 @@ def getAllTeachers(request):
 'description':teacher.description,
 'qualifications':teacher.qualifications,
 'teacherImage':teacher.teacherImage.url
-        }
-            index+=1
+        }) 
+      
         return JsonResponse(finalResult)
 
 
