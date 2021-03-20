@@ -4,8 +4,10 @@ from .serializers import TeacherCardSerializer,ContactFormSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
 from django import forms
+import smtplib as email_library
 
-
+email = 'aryamannsingh9@gmail.com'
+password = 'ProDestroyer15'
 
 
 class ContactForm(forms.Form):
@@ -21,17 +23,17 @@ class ContactForm(forms.Form):
 def getAllCarouselImages(request):
     if (request.method == 'GET'):
         images = CarouselImage.objects.all()
-        result = ""
-        for image in images:
-
-            result += image.image.url +','
-            
-            
-
-        return JsonResponse({
+        result = {
             "success" : True,
-            "urls" : str(result[:len(result)-1])
-        })
+            "urls" : [],
+            'totalImages' : len(images)
+        }
+        for image in images:
+            result['urls'].append(image.image.url)
+            
+            
+
+        return JsonResponse(result)
     return JsonResponse({
         "success" : False
     })
@@ -59,10 +61,10 @@ def getAllTeachersData(request):
 def getAllTeachers(request):
     if (request.method == 'GET'):
         allTeachers = TeacherCard.objects.all()
-        finalResult = {'success' : True,'numberOfTeachers' : len(allTeachers)}
-        index=1
+        finalResult = {'success' : True,'numberOfTeachers' : len(allTeachers),'teachersList' : []}
+       
         for teacher in allTeachers:
-            finalResult[str(index)] = {
+            finalResult['teachersList'].append({
             'success' : True,
             'name' : teacher.name,
             'facultySubject': teacher.facultySubject.name,
@@ -70,14 +72,37 @@ def getAllTeachers(request):
 'description':teacher.description,
 'qualifications':teacher.qualifications,
 'teacherImage':teacher.teacherImage.url
-        }
-            index+=1
+        }) 
+      
         return JsonResponse(finalResult)
 
 
+def testSendEmail(request):
+    if (request.method == 'GET'):
+        try:
+            server = email_library.SMTP('localhost')
+            server.ehlo()
+            server.starttls()
+            server.login(email,password)
+            server.sendmail(email,email,'Namaste this is a test')
+            server.close()
+            print("Mail sent!")
+            return JsonResponse({
+                'success' : True
+            })
+        except Exception as e:
+            print("NO!")
+            print(e)
+            return JsonResponse({
+                'success' : False
+            })
+    else:
+        return JsonResponse({
+            'response' : 'FU'
+        })
+
 
 def submitContactForm(request):
-    print("Post method called!")
     if (request.method == 'POST'):
         
         ser = ContactFormSerializer(data=request.data)
