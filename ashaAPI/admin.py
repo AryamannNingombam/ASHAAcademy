@@ -14,8 +14,6 @@ admin.site.register(CVSubmission,CVSubmissionAdmin)
 
 @admin.register(TeacherCard)
 class DescriptionAdminMCE(admin.ModelAdmin):
-    class Media:
-        js = ('/static/scripts/TinyMCE.js',)
     list_display = ('sno','name','facultySubject','isInManagement')
 
     
