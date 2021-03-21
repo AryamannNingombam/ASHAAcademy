@@ -65,7 +65,6 @@ def getAllTeachers(request):
        
         for teacher in allTeachers:
             finalResult['teachersList'].append({
-            'success' : True,
             'name' : teacher.name,
             'facultySubject': teacher.facultySubject.name,
 'isInManagement': teacher.isInManagement,
