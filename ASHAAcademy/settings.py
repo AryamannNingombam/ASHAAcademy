@@ -25,21 +25,6 @@ SECRET_KEY = '+qcshx5o(w*nxanzjfbnaqf5o)c&-d5uw381k!xxj(be%=(h5k'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-  '127.0.0.1',
-  'localhost',
-  
-]
-CORS_ORIGIN_WHITELIST = (
-        '127.0.0.1',
-        '127.0.0.1',
-       'localhost',
-
-)
-
-CORS_ORIGIN_ALLOW_ALL = False
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -50,6 +35,8 @@ INSTALLED_APPS = [
     'teacher_portal',
     'student_portal',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
