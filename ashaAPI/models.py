@@ -51,6 +51,7 @@ class CVSubmission(models.Model):
     phoneNumber = models.IntegerField(blank=False)
     fileSubmission = models.FileField(blank=False,upload_to='CVSubmissions/')
     message = models.TextField(blank=True,null=True,default='')
+    subjectApplyingFor = models.ForeignKey(Subject,null=True,on_delete=models.CASCADE)
 
 
 
