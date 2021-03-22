@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from django import forms
 import smtplib as email_library
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 email = 'aryamannsingh9@gmail.com'
 password = 'ProDestroyer15'
@@ -100,7 +101,7 @@ def testSendEmail(request):
             'response' : 'FU'
         })
 
-
+@ensure_csrf_cookie
 def submitContactForm(request):
     if (request.method == 'POST'):
         
