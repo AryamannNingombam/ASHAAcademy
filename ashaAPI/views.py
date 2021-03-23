@@ -1,6 +1,5 @@
-from django.shortcuts import render
-from .models import CarouselImage,TeacherCard
-from .serializers import TeacherCardSerializer,ContactFormSerializer
+from .models import CarouselImage,TeacherCard,Subject
+from .serializers import ContactFormSerializer, SubjectSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -91,4 +90,10 @@ def submitContactForm(request):
             'success' : False
         })
 
-   
+
+
+@api_view(['GET'])
+def getAllSubjects(request):
+    allSubjects = Subject.objects.all()
+    finalResult = SubjectSerializer(data=allSubjects,many=True)
+    return Response(finalResult.data)

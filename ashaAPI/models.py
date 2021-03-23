@@ -43,6 +43,12 @@ class ContactRequest(models.Model):
     phoneNumber = models.IntegerField(blank=False)
     message = models.TextField(blank=False,default='')
 
+    def __str__(self):
+        return f'{self.name} | {self.email}'
+
+
+
+
 
 class CVSubmission(models.Model):
     sno = models.AutoField(primary_key=True)
@@ -53,7 +59,8 @@ class CVSubmission(models.Model):
     message = models.TextField(blank=True,null=True,default='')
     subjectApplyingFor = models.ForeignKey(Subject,null=True,on_delete=models.CASCADE)
 
-
+    def __str__(self):
+        return f'{self.name} | {self.email}'
 
 
 
