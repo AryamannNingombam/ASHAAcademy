@@ -7,8 +7,8 @@ from django import forms
 import smtplib as email_library
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-email = 'aryamannsingh9@gmail.com'
-password = 'ProDestroyer15'
+
+
 
 
 class ContactForm(forms.Form):
@@ -77,31 +77,6 @@ def getAllTeachers(request):
         return JsonResponse(finalResult)
 
 
-def testSendEmail(request):
-    if (request.method == 'GET'):
-        try:
-            server = email_library.SMTP('localhost')
-            server.ehlo()
-            server.starttls()
-            server.login(email,password)
-            server.sendmail(email,email,'Namaste this is a test')
-            server.close()
-            print("Mail sent!")
-            return JsonResponse({
-                'success' : True
-            })
-        except Exception as e:
-            print("NO!")
-            print(e)
-            return JsonResponse({
-                'success' : False
-            })
-    else:
-        return JsonResponse({
-            'response' : 'FU'
-        })
-
-@ensure_csrf_cookie
 def submitContactForm(request):
     if (request.method == 'POST'):
         

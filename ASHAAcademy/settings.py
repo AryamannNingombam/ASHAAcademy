@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,13 +31,13 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'corsheaders',
     'ashaAPI',
     'teacher_portal',
     'student_portal',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+    'corsheaders',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
@@ -52,12 +53,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-
-]
 
 
 ROOT_URLCONF = 'ASHAAcademy.urls'
@@ -151,3 +147,19 @@ MEDIA_URL = '/media/'
 STATICFILES_DIRS =[
     os.path.join(BASE_DIR,'static')
 ]
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES' : [
+#         'rest_framework.persmissions.IsAuthenticated'
+#     ],
+#     'DEFAULT_AUTHENTICATION_CLASSES' : [
+#         'rest_framework.authentication.SessionAuthentication'
+#     ]
+# }
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:3000',
+
+# ]

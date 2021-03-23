@@ -25,6 +25,5 @@ urlpatterns = [
    path('testApi/',views.testRequest,name = 'test'),
     path('getAllTeachers/',views.getAllTeachers,name='allTeachers'),
     path("postContactForm/",views.submitContactForm,name='postContactForm'),
-    path('testSendEmail/',views.testSendEmail,name='testSendMail')
-
+    
 ]
