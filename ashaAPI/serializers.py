@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CarouselImage, ContactRequest,TeacherCard,Subject
+from .models import CVSubmission, CarouselImage, ContactRequest,Subject
 
 
 
@@ -23,4 +23,18 @@ class SubjectSerializer(serializers.ModelSerializer):
         model = Subject 
         fields = [
             'name'
+        ]
+
+
+class CVFormSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CVSubmission
+        fields = [
+            'name',
+'email',
+'phoneNumber',
+'fileSubmission',
+'message',
+'subjectApplyingFor',
         ]
