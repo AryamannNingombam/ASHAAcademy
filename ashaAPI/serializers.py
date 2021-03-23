@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CarouselImage, ContactRequest,TeacherCard
+from .models import CarouselImage, ContactRequest,TeacherCard,Subject
 
 
 
@@ -8,14 +8,6 @@ class CarouselImageSerializer(serializers.ModelSerializer):
         model = CarouselImage
         fields = ['sno','name','image']
 
-class TeacherCardSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = TeacherCard
-        fields = ['sno','name','facultySubject','isInManagement','description',
-        'qualifications','teacherImage'
-        ]
-
 
 class ContactFormSerializer(serializers.ModelSerializer):
 
@@ -23,4 +15,12 @@ class ContactFormSerializer(serializers.ModelSerializer):
         model = ContactRequest
         fields = [
             'name','email','phoneNumber','message'
+        ]
+
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject 
+        fields = [
+            'name'
         ]
