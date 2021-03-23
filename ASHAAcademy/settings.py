@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from Backend.ashaAPI.views import testRequest
+
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,23 +31,35 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'ashaAPI',
+ 
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+       'ashaAPI',
     'teacher_portal',
     'student_portal',
     'rest_framework',
-    'rest_framework.authtoken',
-    'rest_auth',
-    'corsheaders',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # 'rest_framework.authtoken',
+    # 'rest_auth',
+    # 'corsheaders',
 
 ]
 
+# MIDDLEWARE = [
+  
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.security.SecurityMiddleware',
+#     #    'corsheaders.middleware.CorsMiddleware',
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+# ]
 MIDDLEWARE = [
-     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -61,9 +73,7 @@ ROOT_URLCONF = 'ASHAAcademy.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates',
-
-                 ],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,19 +92,23 @@ WSGI_APPLICATION = 'ASHAAcademy.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'ASHA_ACADEMY_DATABASE',
-#         'USER' : 'postgres',
-#         'PASSWORD' : os.environ.get('ASHA_ACADEMY_DATABASE_PASSWORD'),
-#         'HOST' : 'localhost',
-#         'PORT' : '5432'        
-#     }
-# }
 
+# CORS_ALLOW_CREDENTIALS = True
 
+# CORS_ORIGIN_WHITELIST = [
+#     # 'http://localhost:3000',
 
+# ]
+
+# ALLOWED_HOSTS=['http://localhost:3000',
+# '127.0.0.1'
+# ]
+# CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = (
+#        'http://localhost:3000',
+#        '127.0.0.1'
+# )
+ALLOWED_HOSTS = []
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -157,9 +171,9 @@ STATICFILES_DIRS =[
 #     ]
 # }
 
-CORS_ORIGIN_ALLOW_ALL = True
-
+# CORS_ORIGIN_ALLOW_ALL = False
 # CORS_ORIGIN_WHITELIST = [
-#     'http://localhost:3000',
+
+#     "http://localhost:3000",
 
 # ]
