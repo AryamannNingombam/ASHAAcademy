@@ -1,11 +1,11 @@
 from .models import CarouselImage,TeacherCard,Subject
-from .serializers import ContactFormSerializer, SubjectSerializer
+from .serializers import CVFormSerializer, ContactFormSerializer, SubjectSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django import forms
 from django.middleware.csrf import get_token
-
+from base64 import b64decode
 
 
 class ContactForm(forms.Form):
@@ -76,10 +76,6 @@ def getAllTeachers(request):
 
 @api_view(['POST'])
 def submitContactForm(request):
-    
-    
-        print("Submit contact called!")    
-        
         ser = ContactFormSerializer(data=request.data)
         if (ser.is_valid()):
             ser.save()
@@ -97,3 +93,16 @@ def getAllSubjects(request):
     allSubjects = Subject.objects.all()
     finalResult = SubjectSerializer(data=allSubjects,many=True)
     return Response(finalResult.data)
+
+
+@api_view(['POST'])
+def postCVForm(request):
+    ser = CVFormSerializer(data=request.data)
+    if (ser.is_valid()):
+        ser.save()
+        return JsonResponse({
+            'success' : True
+        })
+    return JsonResponse({
+        'success' : False
+    })

@@ -24,5 +24,6 @@ urlpatterns = [
     path('getAllTeachers/',views.getAllTeachers,name='allTeachers'),
     path("postContactForm/",views.submitContactForm,name='postContactForm'),
     path('getCSRFToken/',views.getToken,name='getCSRFToken'),
-    path('getAllSubjects/',views.getAllSubjects,name='getAllSubjects')
+    path('getAllSubjects/',views.getAllSubjects,name='getAllSubjects'),
+    path('postCVForm/',views.postCVForm,name='postCVForm')
 ]
