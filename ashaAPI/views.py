@@ -3,11 +3,9 @@ from .models import CarouselImage,TeacherCard
 from .serializers import TeacherCardSerializer,ContactFormSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from django import forms
-import smtplib as email_library
-from django.views.decorators.csrf import ensure_csrf_cookie
-
-
+from django.middleware.csrf import get_token
 
 
 
@@ -16,13 +14,18 @@ class ContactForm(forms.Form):
     content = forms.CharField(label = 'Content',widget = forms.Textarea(attrs = {'id' : 'content','name' : 'content','class' : 'form-control formStyle','rows' : '10','required' : 'true' }))
     phoneNumber = forms.IntegerField(label='PhoneNumber',widget = forms.TextInput(attrs={'id' : 'phoneNumber','name' : 'phoneNumber','class' : 'form-control formStyle','placeholder' : "Enter phone number",'required' : 'true'}))
     
+@api_view(['GET'])
+def getToken(request):
+    print(f"Get token called! :  {get_token(request)}")
     
-    
+    return JsonResponse({"success" : True,"token" : get_token(request)})
 
 
-
+@api_view(['GET'])
 def getAllCarouselImages(request):
-    if (request.method == 'GET'):
+
+
+ 
         images = CarouselImage.objects.all()
         result = {
             "success" : True,
@@ -35,21 +38,16 @@ def getAllCarouselImages(request):
             
 
         return JsonResponse(result)
-    return JsonResponse({
-        "success" : False
-    })
+   
 
-
+@api_view(['GET'])
 def testRequest(request):
-    if (request.method == 'GET'):
+  
         return JsonResponse({
             "success" : True,
             "passingExam?" : False
         })
-    return JsonResponse({
-        "success" : True,
-        'passingExam?' : False
-    })
+
 
 
 def getAllTeachersData(request):
@@ -58,9 +56,10 @@ def getAllTeachersData(request):
     return Response(ser.data)
 
 
-
+@api_view(['GET'])
 def getAllTeachers(request):
-    if (request.method == 'GET'):
+
+
         allTeachers = TeacherCard.objects.all()
         finalResult = {'success' : True,'numberOfTeachers' : len(allTeachers),'teachersList' : []}
        
@@ -76,17 +75,20 @@ def getAllTeachers(request):
       
         return JsonResponse(finalResult)
 
-
+@api_view(['POST'])
 def submitContactForm(request):
-    if (request.method == 'POST'):
+    
+    
+        print("Submit contact called!")    
         
         ser = ContactFormSerializer(data=request.data)
         if (ser.is_valid()):
             ser.save()
-        return JsonResponse({
+            return JsonResponse({
             'success' : True
         })
+        return JsonResponse({
+            'success' : False
+        })
 
-    return JsonResponse({
-        'success' : False
-    })
+   
