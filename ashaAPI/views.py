@@ -1,18 +1,11 @@
-from .models import CarouselImage,TeacherCard,Subject
+from .models import CarouselImage,TeacherCard,Subject,CVSubmission
 from .serializers import CVFormSerializer, ContactFormSerializer, SubjectSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django import forms
 from django.middleware.csrf import get_token
-from base64 import b64decode
 
 
-class ContactForm(forms.Form):
-    email = forms.EmailField(label = 'Email',widget = forms.EmailInput( attrs = {'id' : 'email', 'name' : 'email','class' : 'form-control formStyle','placeholder' : 'Enter Email','required' : 'true'}))
-    content = forms.CharField(label = 'Content',widget = forms.Textarea(attrs = {'id' : 'content','name' : 'content','class' : 'form-control formStyle','rows' : '10','required' : 'true' }))
-    phoneNumber = forms.IntegerField(label='PhoneNumber',widget = forms.TextInput(attrs={'id' : 'phoneNumber','name' : 'phoneNumber','class' : 'form-control formStyle','placeholder' : "Enter phone number",'required' : 'true'}))
-    
 @api_view(['GET'])
 def getToken(request):
     print(f"Get token called! :  {get_token(request)}")
@@ -101,12 +94,24 @@ def getAllSubjects(request):
 
 @api_view(['POST'])
 def postCVForm(request):
-    ser = CVFormSerializer(data=request.data)
-    if (ser.is_valid()):
-        ser.save()
+    try:
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phoneNumber =request.POST.get('phoneNumber')
+        fileSubmission = request.FILES.get('fileSubmission')
+        message = request.POST.get('message')
+        print(request.POST.get('subjectApplyingFor'))
+        subjectApplyingFor = Subject.objects.get(name=request.POST.get('subjectApplyingFor'))
+        print(subjectApplyingFor)
+        newCVSubmission = CVSubmission(name=name,email=email,phoneNumber=phoneNumber,fileSubmission=fileSubmission,message=message,subjectApplyingFor=subjectApplyingFor)
+        newCVSubmission.save()
         return JsonResponse({
-            'success' : True
+         'success' : True,
+     })  
+    except Exception as e:
+        return JsonResponse({
+            'success' : False,
+            'error' : e
         })
-    return JsonResponse({
-        'success' : False
-    })
+
+    
