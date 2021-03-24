@@ -91,9 +91,13 @@ def submitContactForm(request):
 @api_view(['GET'])
 def getAllSubjects(request):
     allSubjects = Subject.objects.all()
-    finalResult = SubjectSerializer(data=allSubjects,many=True)
-    return Response(finalResult.data)
-
+    finalResult = {
+        'success' : True,
+        'subjects' : []
+    }
+    for subject in allSubjects:
+        finalResult['subjects'].append(subject.name)
+    return JsonResponse(finalResult)
 
 @api_view(['POST'])
 def postCVForm(request):
