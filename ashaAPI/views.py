@@ -1,4 +1,4 @@
-from .models import CarouselImage,TeacherCard,Subject,CVSubmission
+from .models import CarouselImage,Subject,CVSubmission
 from .serializers import CVFormSerializer, ContactFormSerializer, SubjectSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -42,30 +42,6 @@ def testRequest(request):
 
 
 
-def getAllTeachersData(request):
-    allTeachers = TeacherCard.objects.all()
-    ser = TeacherCard(data=allTeachers,many=True)
-    return Response(ser.data)
-
-
-@api_view(['GET'])
-def getAllTeachers(request):
-
-
-        allTeachers = TeacherCard.objects.all()
-        finalResult = {'success' : True,'numberOfTeachers' : len(allTeachers),'teachersList' : []}
-       
-        for teacher in allTeachers:
-            finalResult['teachersList'].append({
-            'name' : teacher.name,
-            'facultySubject': teacher.facultySubject.name,
-'isInManagement': teacher.isInManagement,
-'description':teacher.description,
-'qualifications':teacher.qualifications,
-'teacherImage':teacher.teacherImage.url
-        }) 
-      
-        return JsonResponse(finalResult)
 
 @api_view(['POST'])
 def submitContactForm(request):

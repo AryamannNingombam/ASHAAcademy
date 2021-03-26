@@ -21,7 +21,6 @@ from . import views
 urlpatterns = [
    path('getCarouselImages/',views.getAllCarouselImages,name='all_images'),
    path('testApi/',views.testRequest,name = 'test'),
-    path('getAllTeachers/',views.getAllTeachers,name='allTeachers'),
     path("postContactForm/",views.submitContactForm,name='postContactForm'),
     path('getCSRFToken/',views.getToken,name='getCSRFToken'),
     path('getAllSubjects/',views.getAllSubjects,name='getAllSubjects'),

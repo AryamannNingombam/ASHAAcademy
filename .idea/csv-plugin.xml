@@ -3,7 +3,21 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/django/contrib/auth/models.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/ashaAPI/views.py">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/teacher_portal/views.py">
           <value>
             <Attribute>
               <option name="separator" value=":" />
