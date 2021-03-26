@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     'teacher_portal',
     'student_portal',
     'rest_framework',
-    # 'rest_framework.authtoken',
+    'rest_framework.authtoken',
     # 'rest_auth',
-    # 'corsheaders',
+    'corsheaders',
 
 ]
 
