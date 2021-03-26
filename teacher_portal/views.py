@@ -4,8 +4,7 @@ from rest_framework.decorators import api_view
 from .models import TeacherData
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
-from rest_framework.contrib.models import Token
-
+from rest_framework.authtoken.models import Token
 
 
 
