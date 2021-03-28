@@ -11,10 +11,14 @@ from rest_framework.authtoken.models import Token
 @api_view(['POST'])
 def signInRequest(requests):
     try:
+        print(requests)
         username = requests.POST.get('username')
         password = requests.POST.get('password')
+        print(username)
+        print(password)
+        print(requests.POST)
         tempCheck = authenticate(username=username,password=password)
-        print(tempCheck)
+        
         if (not tempCheck):
             return JsonResponse({
                 'success' : False,
