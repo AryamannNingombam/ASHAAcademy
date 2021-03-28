@@ -14,6 +14,7 @@ def signInRequest(requests):
         username = requests.POST.get('username')
         password = requests.POST.get('password')
         tempCheck = authenticate(username=username,password=password)
+        print(tempCheck)
         if (not tempCheck):
             return JsonResponse({
                 'success' : False,
