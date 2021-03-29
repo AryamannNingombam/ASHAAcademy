@@ -5,7 +5,8 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 class TeacherData(models.Model):
 
@@ -17,8 +18,8 @@ class TeacherData(models.Model):
     description = models.TextField(blank=False)
     qualifications = models.TextField(blank=False)
     teacherImage = models.ImageField(blank=False,upload_to='TeacherImages/')
-    isTeacher= models.BooleanField(default=True,blank=False,null=True)
-    isStudent= models.BooleanField(default=False,blank=False,null=True)
+    isTeacher = models.BooleanField(default=True,blank=False,null=True)
+    isStudent = models.BooleanField(default=False,blank=False,null=True)
 
     def __str__(self):
         return self.teacherUserModel.username
@@ -29,5 +30,8 @@ def createAuthToken(sender,instance=None,created=False,**kwargs):
     if created:
         Token.objects.create(user=instance)
 
+@receiver(post_delete, sender=TeacherData)
+def submission_delete(sender, instance, **kwargs):
+    instance.teacherImage.delete(False)
 
 

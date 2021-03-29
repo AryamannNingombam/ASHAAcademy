@@ -7,6 +7,14 @@ from django.middleware.csrf import get_token
 from django.contrib.auth.models import User
 from django.contrib.auth import logout,login,authenticate
 
+def returnFailureResponse(string1,string2):
+    return {
+        'success': False,
+        string1: False,
+        'error': string2,
+    }
+
+
 
 @api_view(['GET'])
 def getToken(request):
@@ -91,8 +99,21 @@ def postCVForm(request):
             'error' : e
         })
 
-    
+@api_view(['POST'])
+def signOutMainAdmin(request):
+    token = request.POST.get('TOKEN')
+    tempCheck = Token.objects.get(key=token)
+    if not tempCheck:
+        return JsonResponse(returnFailureResponse('loggedOut',"INVALID"))
 
+    user = tempCheck.user
+    if not user.is_superuser:
+        return JsonResponse(returnFailureResponse('loggedOut',"NON_SUPERUSER"))
+    logout(request)
+    return JsonResponse({
+        'success': True,
+        'loggedOut': True
+    })
 
 
 @api_view(['POST'])
@@ -101,17 +122,12 @@ def signInMainAdmin(request):
     password = request.POST.get('password')
     tempCheck = authenticate(username=username,password=password)
     if not  tempCheck.is_valid():
-        return JsonResponse({
-            'success':False,
-            'error':'Invalid Credentials'
-        })
+        return JsonResponse(returnFailureResponse('signedIn','Invalid Credentials'))
     if not tempCheck.is_superuser:
-        return JsonResponse({
-            'success' : False,
-            'error':"Not authenticated"
-        })
+        return JsonResponse(returnFailureResponse('signedIn',"Not authenticated"))
     token = Token.objects.get(user=tempCheck).key
+    login(request,tempCheck)
     return JsonResponse({
-        'success':False,
+        'success':True,
         'token':token
     })

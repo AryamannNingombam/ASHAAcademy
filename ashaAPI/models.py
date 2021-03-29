@@ -1,7 +1,7 @@
 
 from django.db import models
-
-# Create your models here.
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 class Subject(models.Model):
     sno = models.AutoField(primary_key=True)
@@ -17,14 +17,6 @@ class CarouselImage(models.Model):
 
     def __str__(self):
         return self.name
-
-
-
-
-
-
-
-    
 
 
 class ContactRequest(models.Model):
@@ -53,5 +45,14 @@ class CVSubmission(models.Model):
     def __str__(self):
         return f'{self.name} | {self.email}'
 
+#code to delete images/files when a model instance is deleted
+
+@receiver(post_delete, sender=CarouselImage)
+def submission_delete(sender, instance, **kwargs):
+    instance.image.delete(False)
+
+@receiver(post_delete, sender=CVSubmission)
+def submission_delete(sender, instance, **kwargs):
+    instance.fileSubmission.delete(False)
 
 

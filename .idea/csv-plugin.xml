@@ -10,7 +10,28 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/ashaAPI/models.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/ashaAPI/views.py">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/student_portal/models.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/student_portal/views.py">
           <value>
             <Attribute>
               <option name="separator" value=":" />

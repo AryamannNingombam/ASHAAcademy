@@ -6,6 +6,19 @@ from django.contrib.auth import login,logout,authenticate
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 
+def returnFailureResponse(string1,string2):
+    return {
+        'success': False,
+        string1: False,
+        'error': string2,
+    }
+
+
+
+
+
+
+
 
 @api_view(['POST'])
 def signInRequest(request):
@@ -17,16 +30,13 @@ def signInRequest(request):
     tempCheck = authenticate(username=username,password=password)
     
     if (not tempCheck):
-        return JsonResponse({
-                'success' : False,
-                'response' : "Invalid credentials"
-            })
+        return JsonResponse(returnFailureResponse('signedIn',"Invalid credentials"))
     else:
         login(request, tempCheck)
         userData = TeacherData.objects.get(teacherUserModel = tempCheck)
         token = Token.objects.get(user=tempCheck).key
-        result ={
-                'logged-in': True,
+        result = {
+                'success': True,
                 'userDetail': {
                     "username": username,
                     'token': token,
@@ -38,25 +48,47 @@ def signInRequest(request):
                     'email': userData.teacherUserModel.email,
                     'facultySubject': userData.facultySubject.name,
                     'isInManagement': userData.isInManagement,
-                    'qualifications': userData.qualifications,
                     'description': userData.description,
                 },
 
 
             }
-        print(result)
         return JsonResponse(result)
 
-        
 
+@api_view(['POST'])
+def signOutRequest(request):
+    try:
+        token = request.POST.get('TOKEN')
+        tempCheck = Token.objects.get(key=token)
+        if not tempCheck:
+            return JsonResponse(returnFailureResponse('signedOut', "INVALID_TOKEN"))
+        user = tempCheck.user
+        teacherData = TeacherData.objects.get(studentUserModel=user)
+        if not teacherData.isTeacher:
+            return JsonResponse(returnFailureResponse('signedOut', 'ONLY_STUDENTS_TO_SIGN_OUT'))
+
+        logout(request)
+        return JsonResponse({
+            'success': True,
+            'signedOut': True,
+
+        })
+
+    except Exception as e:
+        return JsonResponse(returnFailureResponse('signedOut',e))
 
 
 @api_view(['POST'])
 def testRequest(request):
     print(request.POST)
     return JsonResponse({
-        'success' :True,
+        'success': True,
     })
+
+
+
+
 
 
 
@@ -65,7 +97,7 @@ def getAllTeachers(request):
     
     try:
         finalResult = {
-            'success' : True,
+            'success': True,
             'teachersList' : []
 
         }
@@ -92,8 +124,8 @@ def getAllTeachers(request):
 
     except Exception as e:
         return JsonResponse({
-        'success' : False,
-        'reason' : e
+        'success': False,
+        'error': e
     })
 
 
@@ -103,23 +135,20 @@ def deleteTeacherData(request):
         token = request.POST.get('TOKEN')
         tempCheck = Token.objects.get(key=token)
         if not tempCheck:
-            return JsonResponse({
-                'success': False,
-                'error': "Invalid Credentials"
-            })
+            return JsonResponse(returnFailureResponse('teacherDeleted',"Invalid Credentials"))
         user = tempCheck.user
         if not user.is_superuser:
-            return JsonResponse({
-                'success': False,
-                'error': "Not authenticated"
-            })
+            return JsonResponse(returnFailureResponse('teacherDeleted',"Not authenticated"))
         username = request.POST.get('username')
         teacherUserToDelete = User.objects.get(username=username)
+
         if not teacherUserToDelete:
-            return JsonResponse({
-                'success' : False,
-                'error' : "Teacher does not exist",
-            })
+            return JsonResponse(returnFailureResponse('teacherDeleted',"Teacher does not exist"))
+
+        teacherData = TeacherData.objects.get(teacherUserModel=teacherUserToDelete)
+        if not teacherData.isTeacher:
+            return JsonResponse(returnFailureResponse('teacherDeleted',"Teacher deletion only allowed"))
+        teacherData.delete()
         teacherUserToDelete.delete()
         return JsonResponse({
             'success' :True,
@@ -129,13 +158,7 @@ def deleteTeacherData(request):
 
     except Exception as e:
 
-        return JsonResponse({
-
-            'success': False,
-
-            'error': e,
-
-        })
+        return JsonResponse(returnFailureResponse('teacherDeleted',e))
 
 @api_view(['POST'])
 def addNewTeacher(request):
@@ -143,16 +166,10 @@ def addNewTeacher(request):
         token =  request.POST.get('TOKEN')
         tempCheck = Token.objects.get(key=token)
         if not tempCheck:
-            return JsonResponse({
-                'success' : False,
-                'error' : "Invalid Credentials"
-            })
+            return JsonResponse(returnFailureResponse('teacherAdded',"Invalid Credentials"))
         user = tempCheck.user
         if not user.is_superuser:
-            return JsonResponse({
-                'success' : False,
-                'error' : "Not authenticated"
-            })
+            return JsonResponse(returnFailureResponse('teacherAdded', "Not authenticated"))
         username = request.POST.get('username')
         firstName = request.POST.get('firstName')
         lastName = request.POST.get('lastName')
@@ -192,7 +209,57 @@ def addNewTeacher(request):
 
 
     except Exception as e:
+        return JsonResponse(returnFailureResponse('teacherAdded',e))
+
+
+
+
+
+
+
+@api_view(['POST'])
+def updateTeacherData(request):
+    try:
+        token =  request.POST.get('TOKEN')
+        tempCheck = Token.objects.get(key=token)
+        if not tempCheck:
+            return JsonResponse(returnFailureResponse('teacherDetailsUpdated',"Invalid Credentials"))
+        user = tempCheck.user
+        if not user.is_superuser:
+            return JsonResponse(returnFailureResponse('teacherDetailsUpdated', "Not authenticated"))
+        username = request.POST.get('username')
+        firstName = request.POST.get('firstName')
+        lastName = request.POST.get('lastName')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+        teacherID = request.POST.get('teacherID')
+        isInManagement = request.POST.get('isInManagement')
+        teacherSubject = request.POST.get('teacherSubjects')
+        description = request.POST.get('description')
+        qualifications=  request.POST.get('qualifications')
+        teacherImage = request.FILES.get('teacherImage')
+        teachingSubject = Subject.objects.get(name=teacherSubject)
+        user.username = username
+        user.first_name = firstName
+        user.last_name = lastName
+        user.password = password
+        user.email = email
+
+        user.save()
+        newTeacherData = TeacherData.objects.get(teacherUserModel=user)
+        newTeacherData.teacherID = teacherID
+        newTeacherData.isInManagement = isInManagement
+        newTeacherData.teacherSubject = teacherSubject
+        newTeacherData.description = description
+        newTeacherData.qualifications = qualifications
+        newTeacherData.teacherImage = teacherImage
+        newTeacherData.teachingSubject = teachingSubject
+        newTeacherData.save()
         return JsonResponse({
-            'success' : False,
-            'error' : e,
+            'success': True,
+            'teacherDetailsUpdated': True,
         })
+
+
+    except Exception as e:
+        return JsonResponse(returnFailureResponse('teacherDetailsUpdated',e))
