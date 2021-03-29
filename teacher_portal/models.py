@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 
 
 class TeacherData(models.Model):
+
     sno = models.AutoField(primary_key=True)
     teacherUserModel = models.OneToOneField(User,on_delete=models.CASCADE)
     teacherID = models.CharField(null=False,blank=False,max_length=100,unique=True,default='')
@@ -16,6 +17,8 @@ class TeacherData(models.Model):
     description = models.TextField(blank=False)
     qualifications = models.TextField(blank=False)
     teacherImage = models.ImageField(blank=False,upload_to='TeacherImages/')
+    isTeacher= models.BooleanField(default=True,blank=False,null=True)
+    isStudent= models.BooleanField(default=False,blank=False,null=True)
 
     def __str__(self):
         return self.teacherUserModel.username

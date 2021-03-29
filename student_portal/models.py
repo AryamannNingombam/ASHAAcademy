@@ -12,3 +12,6 @@ class StudentData(models.Model):
     parentName = models.CharField(max_length=100, blank=False, default='')
     studentImage = models.ImageField(upload_to='StudentImages/',blank=True,null=True)
     parentPhoneNumber = models.IntegerField()
+    isTeacher = models.BooleanField(default=False, blank=False, null=True)
+    isStudent = models.BooleanField(default=True, blank=False, null=True)
+

@@ -8,7 +8,6 @@ from django.middleware.csrf import get_token
 
 @api_view(['GET'])
 def getToken(request):
-    print(f"Get token called! :  {get_token(request)}")
     
     return JsonResponse({"success" : True,"token" : get_token(request)})
 
@@ -91,3 +90,4 @@ def postCVForm(request):
         })
 
     
+
