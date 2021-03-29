@@ -97,6 +97,45 @@ def getAllTeachers(request):
     })
 
 
+@api_view(['POST'])
+def deleteTeacherData(request):
+    try:
+        token = request.POST.get('TOKEN')
+        tempCheck = Token.objects.get(key=token)
+        if not tempCheck:
+            return JsonResponse({
+                'success': False,
+                'error': "Invalid Credentials"
+            })
+        user = tempCheck.user
+        if not user.is_superuser:
+            return JsonResponse({
+                'success': False,
+                'error': "Not authenticated"
+            })
+        username = request.POST.get('username')
+        teacherUserToDelete = User.objects.get(username=username)
+        if not teacherUserToDelete:
+            return JsonResponse({
+                'success' : False,
+                'error' : "Teacher does not exist",
+            })
+        teacherUserToDelete.delete()
+        return JsonResponse({
+            'success' :True,
+            'teacherDeleted' :True,
+        })
+
+
+    except Exception as e:
+
+        return JsonResponse({
+
+            'success': False,
+
+            'error': e,
+
+        })
 
 @api_view(['POST'])
 def addNewTeacher(request):
