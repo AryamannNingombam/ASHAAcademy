@@ -1,9 +1,11 @@
 from .models import CarouselImage,Subject,CVSubmission
 from .serializers import CVFormSerializer, ContactFormSerializer, SubjectSerializer
 from django.http import JsonResponse
-from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from django.middleware.csrf import get_token
+from django.contrib.auth.models import User
+from django.contrib.auth import logout,login,authenticate
 
 
 @api_view(['GET'])
@@ -91,3 +93,25 @@ def postCVForm(request):
 
     
 
+
+
+@api_view(['POST'])
+def signInMainAdmin(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    tempCheck = authenticate(username=username,password=password)
+    if not  tempCheck.is_valid():
+        return JsonResponse({
+            'success':False,
+            'error':'Invalid Credentials'
+        })
+    if not tempCheck.is_superuser:
+        return JsonResponse({
+            'success' : False,
+            'error':"Not authenticated"
+        })
+    token = Token.objects.get(user=tempCheck).key
+    return JsonResponse({
+        'success':False,
+        'token':token
+    })

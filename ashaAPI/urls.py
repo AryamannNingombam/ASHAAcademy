@@ -24,5 +24,6 @@ urlpatterns = [
     path("postContactForm/",views.submitContactForm,name='postContactForm'),
     path('getCSRFToken/',views.getToken,name='getCSRFToken'),
     path('getAllSubjects/',views.getAllSubjects,name='getAllSubjects'),
-    path('postCVForm/',views.postCVForm,name='postCVForm')
+    path('postCVForm/',views.postCVForm,name='postCVForm'),
+    path('signInMainAdmin/',views.signInMainAdmin,name='signInMainAdmin')
 ]
