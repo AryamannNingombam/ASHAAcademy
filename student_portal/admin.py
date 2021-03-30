@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import StudentData
+from .models import StudentData,QuestionPaper,Marksheet
 # Register your models here.
 
 
@@ -9,3 +9,5 @@ class StudentDataView(admin.ModelAdmin):
     
     
 admin.site.register(StudentData,StudentDataView)
+admin.site.register(QuestionPaper)
+admin.site.register(Marksheet)

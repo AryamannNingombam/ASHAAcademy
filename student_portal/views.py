@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-from .models import StudentData
+from .models import StudentData, QuestionPaper
 from ashaAPI.models import Subject
 from django.contrib.auth import login, logout, authenticate
 from rest_framework.authtoken.models import Token
@@ -132,6 +132,7 @@ def addNewStudent(request):
         parentName = request.POST.get('parentName')
         studentImage = request.FILES.get('studentImage')
         parentPhoneNumber = request.POST.get('parentPhoneNumber')
+        attendance = request.POST.get('attendance')
 
 
         newUser = User.objects.create_user(
@@ -151,6 +152,7 @@ def addNewStudent(request):
         parentName = parentName,
         studentImage = studentImage,
         parentPhoneNumber = parentPhoneNumber,
+            attendancePercentage=attendance
         )
         newStudentData.save()
 
@@ -188,6 +190,7 @@ def updateTeacherData(request):
         parentName = request.POST.get('parentName')
         studentImage = request.FILES.get('studentImage')
         parentPhoneNumber = request.POST.get('parentPhoneNumber')
+        attendance = request.POST.get('attendance')
         user.username = username
         user.first_name = firstName
         user.last_name = lastName
@@ -206,7 +209,7 @@ def updateTeacherData(request):
         newStudentData.parentName = parentName
         newStudentData.studentImage = studentImage
         newStudentData.parentPhoneNumber = parentPhoneNumber
-
+        newStudentData.attendancePercentage = attendance
 
         newStudentData.save()
         return JsonResponse({
@@ -217,3 +220,29 @@ def updateTeacherData(request):
 
     except Exception as e:
         return JsonResponse(returnFailureResponse('studentDetailsUpdated',e))
+
+
+
+
+
+
+
+@api_view(['POST'])
+def uploadQuestionPaper(request):
+    token = request.POST.get('TOKEN')
+    tempCheck = Token.objects.get(key=token)
+    if not tempCheck:
+        return returnFailureResponse('questionPaperUploaded','Not authenticated')
+    user = tempCheck.user
+    if not user.is_superuser:
+        return returnFailureResponse('questionPaperUploaded',"Don't have enough permissions")
+    classFor = request.POST.get('classFor')
+    subjectFor = Subject.objects.get(name=request.POST.get('subjectFor'))
+    paperPDF = request.FILES.get('paperPDF')
+    newQuestionPaper = QuestionPaper(classFor=classFor,subjectFor=subjectFor,paperPDF=paperPDF)
+    newQuestionPaper.save()
+    return JsonResponse({
+        'success': True,
+        'paperUploaded': True,
+    })
+

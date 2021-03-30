@@ -15,10 +15,24 @@ class StudentData(models.Model):
     parentPhoneNumber = models.IntegerField()
     isTeacher = models.BooleanField(default=False, blank=False, null=True)
     isStudent = models.BooleanField(default=True, blank=False, null=True)
+    attendancePercentage = models.IntegerField(default=100)
 
 
 def uploadToCallback(instance,filename):
     return f'StudentMarksheets/{instance.writtenBy.studentUserModel.username}/{instance.subject}/{filename}'
+
+
+def uploadToCallbackQuestionPaper(instance,filename):
+    return f'QuestionPapers/{instance.subjectFor.name}/{filename}'
+
+
+class QuestionPaper(models.Model):
+    sno = models.AutoField(primary_key=True)
+    classFor = models.IntegerField(null=False,blank=False)
+    paperPDF = models.FileField(upload_to=uploadToCallbackQuestionPaper)
+    subjectFor = models.ForeignKey(Subject,on_delete=models.CASCADE)
+
+
 
 class Marksheet(models.Model):
     sno = models.AutoField(primary_key=True)
@@ -27,7 +41,10 @@ class Marksheet(models.Model):
     subject = models.ForeignKey(Subject,on_delete=models.CASCADE,)
     totalMarks = models.IntegerField()
     obtainedMarks = models.IntegerField()
-    marksheetPDF = models.FileField(upload_to=uploadToCallback,null=False,blank=False)
+    marksheetPDF = models.FileField(upload_to=uploadToCallback,blank=False)
+    questionPaper = models.ForeignKey(QuestionPaper,on_delete=models.CASCADE,null=True)
+
+
 
 
 

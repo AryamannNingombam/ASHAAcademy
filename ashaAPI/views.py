@@ -6,6 +6,10 @@ from rest_framework.decorators import api_view
 from django.middleware.csrf import get_token
 from django.contrib.auth.models import User
 from django.contrib.auth import logout,login,authenticate
+from django.conf import settings
+from django.core.mail import send_mail
+
+
 
 def returnFailureResponse(string1,string2):
     return {
@@ -54,8 +58,15 @@ def testRequest(request):
 
 @api_view(['POST'])
 def submitContactForm(request):
+        email = request.POST.get('email')
         ser = ContactFormSerializer(data=request.data)
         if (ser.is_valid()):
+            subject = "Hello there!"
+            message = "Hello! Thank you for contacting us, we will get back to you soon!"
+            emailFrom = settings.EMAIL_HOST_USER
+            recipientList = [email,]
+            send_mail(subject,message,emailFrom,recipientList)
+
             ser.save()
             return JsonResponse({
             'success' : True
