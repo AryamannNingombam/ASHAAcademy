@@ -25,5 +25,7 @@ urlpatterns = [
     path('getCSRFToken/',views.getToken,name='getCSRFToken'),
     path('getAllSubjects/',views.getAllSubjects,name='getAllSubjects'),
     path('postCVForm/',views.postCVForm,name='postCVForm'),
-    path('signInMainAdmin/',views.signInMainAdmin,name='signInMainAdmin')
+    path('signInMainAdmin/',views.signInMainAdmin,name='signInMainAdmin'),
+    path('signOutMainAdmin/', views.signOutMainAdmin,name='signOutMainAdmin'),
+    path('testApiForOnlyAdmins/',views.testRequestForOnlyAdmins,name='testRequestForOnlyAdmins')
 ]

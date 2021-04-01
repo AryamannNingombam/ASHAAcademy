@@ -142,3 +142,20 @@ def signInMainAdmin(request):
         'success':True,
         'token':token
     })
+
+
+@api_view(['GET'])
+def testRequestForOnlyAdmins(request):
+    token = request.headers.get('TOKEN')
+    print(token)
+    tempCheck = Token.objects.get(key=token)
+    if not tempCheck:
+        return returnFailureResponse('accessGiven','Not authenticated')
+    user = tempCheck.user
+    if not user.is_superuser:
+        return returnFailureResponse('accessGiven','Not enough permissions')
+
+    return JsonResponse({
+        'success': True,
+        'authenticated': True,
+    })
