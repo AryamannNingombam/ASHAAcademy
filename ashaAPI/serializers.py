@@ -14,7 +14,10 @@ class ContactFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactRequest
         fields = [
-            'name','email','phoneNumber','message'
+            'name',
+'email',
+'phoneNumber',
+'message'
         ]
 
 

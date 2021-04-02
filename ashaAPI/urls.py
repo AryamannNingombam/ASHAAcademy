@@ -27,5 +27,7 @@ urlpatterns = [
     path('postCVForm/',views.postCVForm,name='postCVForm'),
     path('signInMainAdmin/',views.signInMainAdmin,name='signInMainAdmin'),
     path('signOutMainAdmin/', views.signOutMainAdmin,name='signOutMainAdmin'),
-    path('testApiForOnlyAdmins/',views.testRequestForOnlyAdmins,name='testRequestForOnlyAdmins')
+    path('testApiForOnlyAdmins/',views.testRequestForOnlyAdmins,name='testRequestForOnlyAdmins'),
+    path('getAllContactRequests/',views.getAllContactRequests,name='getAllContactRequests'),
+    path('getAllCVSubmissions/',views.getAllCVSubmissions,name='getAllCVSubmissions')
 ]

@@ -1,4 +1,4 @@
-from .models import CarouselImage,Subject,CVSubmission
+from .models import CarouselImage,Subject,CVSubmission,ContactRequest
 from .serializers import CVFormSerializer, ContactFormSerializer, SubjectSerializer
 from django.http import JsonResponse
 from rest_framework.authtoken.models import Token
@@ -125,6 +125,73 @@ def signOutMainAdmin(request):
         'success': True,
         'loggedOut': True
     })
+
+
+
+
+
+
+
+
+@api_view(['GET'])
+def getAllCVSubmissions(request):
+    token = request.headers.get('TOKEN')
+    tempCheck = Token.objects.get(key=token)
+    if not tempCheck:
+        return JsonResponse(returnFailureResponse('gatAllContactRequests','Not authenticated!'))
+
+    user = tempCheck.user
+    if not user.is_superuser:
+        return JsonResponse(returnFailureResponse('gatAllContactRequests','Not authenticated!'))
+
+    #all tests passed
+    allCVSubmissions = CVSubmission.objects.all()
+    finalResult = {
+        'success':True,
+        'allCVSubmissions' : []
+    }
+    for CV in allCVSubmissions:
+        finalResult['allCVSubmissions'].append({
+            'name' : CV.name,
+'email' : CV.email,
+'phoneNumber' : CV.phoneNumber,
+'fileSubmission'  :CV.fileSubmission.url,
+'message' : CV.message,
+'subjectApplyingFor' : CV.subjectApplyingFor.name
+        })
+    
+    return JsonResponse(finalResult)
+
+
+
+
+
+@api_view(['GET'])
+def getAllContactRequests(request):
+    token = request.headers.get('TOKEN')
+    tempCheck = Token.objects.get(key=token)
+    if not tempCheck:
+        return JsonResponse(returnFailureResponse('gatAllContactRequests','Not authenticated!'))
+
+    user = tempCheck.user
+    if not user.is_superuser:
+        return JsonResponse(returnFailureResponse('gatAllContactRequests','Not authenticated!'))
+
+    #all tests passed
+    allContactRequests = ContactRequest.objects.all()
+    finalResult = {
+        'success':True,
+        'allContactRequests' : []
+    }
+    for contactRequest in allContactRequests:
+        finalResult['allContactRequests'].append({
+            'name' : contactRequest.name,
+'email' : contactRequest.email,
+'phoneNumber' : contactRequest.phoneNumber,
+'message' : contactRequest.message
+        })
+    
+    return JsonResponse(finalResult)
 
 
 @api_view(['POST'])
