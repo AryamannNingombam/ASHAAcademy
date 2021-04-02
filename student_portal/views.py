@@ -25,7 +25,7 @@ def signInRequest(request):
         return JsonResponse(returnFailureResponse('signedIn', "Invalid credentials"))
 
     else:
-        login(request, tempCheck)
+  
         userData = StudentData.objects.get(teacherUserModel=tempCheck)
         if not userData.isStudent:
             return JsonResponse(returnFailureResponse('signedIn', "Student only portal"))
@@ -57,15 +57,16 @@ def signOutRequest(request):
     
     try:
         token = request.POST.get('TOKEN')
-        tempCheck = Token.objects.get(key=token)
-        if not tempCheck:
+        tempCheck = Token.objects.filter(key=token)
+        if len(tempCheck) == 0:
             return JsonResponse(returnFailureResponse('signedOut',"INVALID_TOKEN"))
+        tempCheck = tempCheck[0]
         user = tempCheck.user
         studentData = StudentData.objects.get(studentUserModel=user)
         if not studentData.isStudent:
             return JsonResponse(returnFailureResponse('signedOut','ONLY_STUDENTS_TO_SIGN_OUT'))
 
-        logout(request)
+        
         return JsonResponse({
             'success': True,
             'signedOut': True,
@@ -83,18 +84,19 @@ def signOutRequest(request):
 def deleteStudentData(request):
     try:
         token = request.POST.get('TOKEN')
-        tempCheck = Token.objects.get(key=token)
-        if not tempCheck:
+        tempCheck = Token.objects.filter(key=token)
+        if len(tempCheck) == 0:
             return JsonResponse(returnFailureResponse('studentDeleted', "Invalid Credentials"))
+        tempCheck = tempCheck[0]
         user = tempCheck.user
         if not user.is_superuser:
             return JsonResponse(returnFailureResponse('studentDeleted', "Not authenticated"))
         username = request.POST.get('username')
-        studentUserToDelete = User.objects.get(username=username)
-        if not studentUserToDelete:
+        studentUserToDelete = User.objects.filter(username=username)
+        if len(studentUserToDelete) == 0:
             return JsonResponse(returnFailureResponse('studentDeleted', "Student does not exist"))
         
-        
+        studentUserToDelete = studentUserToDelete[0]
         studentData = StudentData.objects.get(studentUserModel=studentUserToDelete)
         if not studentData.isStudent:
             return JsonResponse(returnFailureResponse('studentDeleted', 'Student deletion only allowed'))
@@ -116,9 +118,10 @@ def deleteStudentData(request):
 def addNewStudent(request):
     try:
         token = request.POST.get('TOKEN')
-        tempCheck = Token.objects.get(key=token)
-        if not tempCheck:
+        tempCheck = Token.objects.filter(key=token)
+        if len(tempCheck) ==0:
             return JsonResponse(returnFailureResponse('studentAdded', "Invalid Credentials"))
+        tempCheck = tempCheck[0]
         user = tempCheck.user
         if not user.is_superuser:
             return JsonResponse(returnFailureResponse('studentAdded',  "Not authenticated"))
@@ -174,9 +177,10 @@ def addNewStudent(request):
 def updateTeacherData(request):
     try:
         token =  request.POST.get('TOKEN')
-        tempCheck = Token.objects.get(key=token)
-        if not tempCheck:
+        tempCheck = Token.objects.filter(key=token)
+        if len(tempCheck) == 0:
             return JsonResponse(returnFailureResponse('teacherDetailsUpdated',"Invalid Credentials"))
+        tempCheck = tempCheck[0]
         user = tempCheck.user
         if not user.is_superuser:
             return JsonResponse(returnFailureResponse('teacherDetailsUpdated', "Not authenticated"))
@@ -230,9 +234,10 @@ def updateTeacherData(request):
 @api_view(['POST'])
 def uploadQuestionPaper(request):
     token = request.POST.get('TOKEN')
-    tempCheck = Token.objects.get(key=token)
-    if not tempCheck:
+    tempCheck = Token.objects.filter(key=token)
+    if len(tempCheck) == 0:
         return returnFailureResponse('questionPaperUploaded','Not authenticated')
+    tempCheck = tempCheck[0]
     user = tempCheck.user
     if not user.is_superuser:
         return returnFailureResponse('questionPaperUploaded',"Don't have enough permissions")

@@ -60,15 +60,16 @@ def signInRequest(request):
 def signOutRequest(request):
     try:
         token = request.POST.get('TOKEN')
-        tempCheck = Token.objects.get(key=token)
-        if not tempCheck:
+        tempCheck = Token.objects.filter(key=token)
+        if len(tempCheck) == 0:
             return JsonResponse(returnFailureResponse('signedOut', "INVALID_TOKEN"))
+        tempCheck = tempCheck[0]
         user = tempCheck.user
         teacherData = TeacherData.objects.get(studentUserModel=user)
         if not teacherData.isTeacher:
             return JsonResponse(returnFailureResponse('signedOut', 'ONLY_STUDENTS_TO_SIGN_OUT'))
 
-        logout(request)
+        
         return JsonResponse({
             'success': True,
             'signedOut': True,
@@ -133,18 +134,19 @@ def getAllTeachers(request):
 def deleteTeacherData(request):
     try:
         token = request.POST.get('TOKEN')
-        tempCheck = Token.objects.get(key=token)
-        if not tempCheck:
+        tempCheck = Token.objects.filter(key=token)
+        if len(tempCheck) == 0:
             return JsonResponse(returnFailureResponse('teacherDeleted',"Invalid Credentials"))
+        tempCheck = tempCheck[0]
         user = tempCheck.user
         if not user.is_superuser:
             return JsonResponse(returnFailureResponse('teacherDeleted',"Not authenticated"))
         username = request.POST.get('username')
-        teacherUserToDelete = User.objects.get(username=username)
+        teacherUserToDelete = User.objects.filter(username=username)
 
-        if not teacherUserToDelete:
+        if len(teacherUserToDelete) == 0:
             return JsonResponse(returnFailureResponse('teacherDeleted',"Teacher does not exist"))
-
+        teacherUserToDelete = teacherUserToDelete[0]
         teacherData = TeacherData.objects.get(teacherUserModel=teacherUserToDelete)
         if not teacherData.isTeacher:
             return JsonResponse(returnFailureResponse('teacherDeleted',"Teacher deletion only allowed"))
@@ -164,9 +166,10 @@ def deleteTeacherData(request):
 def addNewTeacher(request):
     try:
         token =  request.POST.get('TOKEN')
-        tempCheck = Token.objects.get(key=token)
-        if not tempCheck:
+        tempCheck = Token.objects.filter(key=token)
+        if len(tempCheck) == 0:
             return JsonResponse(returnFailureResponse('teacherAdded',"Invalid Credentials"))
+        tempCheck = tempCheck[0]
         user = tempCheck.user
         if not user.is_superuser:
             return JsonResponse(returnFailureResponse('teacherAdded', "Not authenticated"))
@@ -221,9 +224,10 @@ def addNewTeacher(request):
 def updateTeacherData(request):
     try:
         token =  request.POST.get('TOKEN')
-        tempCheck = Token.objects.get(key=token)
-        if not tempCheck:
+        tempCheck = Token.objects.filter(key=token)
+        if len(tempCheck) == 0:
             return JsonResponse(returnFailureResponse('teacherDetailsUpdated',"Invalid Credentials"))
+        tempCheck = tempCheck[0]
         user = tempCheck.user
         if not user.is_superuser:
             return JsonResponse(returnFailureResponse('teacherDetailsUpdated', "Not authenticated"))

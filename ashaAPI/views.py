@@ -113,14 +113,14 @@ def postCVForm(request):
 @api_view(['POST'])
 def signOutMainAdmin(request):
     token = request.POST.get('TOKEN')
-    tempCheck = Token.objects.get(key=token)
-    if not tempCheck:
+    tempCheck = Token.objects.filter(key=token)
+    if len(tempCheck) == 0:
         return JsonResponse(returnFailureResponse('loggedOut',"INVALID"))
-
+    tempCheck = tempCheck[0]
     user = tempCheck.user
     if not user.is_superuser:
         return JsonResponse(returnFailureResponse('loggedOut',"NON_SUPERUSER"))
-    logout(request)
+    
     return JsonResponse({
         'success': True,
         'loggedOut': True
@@ -136,10 +136,10 @@ def signOutMainAdmin(request):
 @api_view(['GET'])
 def getAllCVSubmissions(request):
     token = request.headers.get('TOKEN')
-    tempCheck = Token.objects.get(key=token)
-    if not tempCheck:
+    tempCheck = Token.objects.filter(key=token)
+    if len(tempCheck) == 0:
         return JsonResponse(returnFailureResponse('gatAllContactRequests','Not authenticated!'))
-
+    tempCheck  = tempCheck[0]
     user = tempCheck.user
     if not user.is_superuser:
         return JsonResponse(returnFailureResponse('gatAllContactRequests','Not authenticated!'))
@@ -169,10 +169,10 @@ def getAllCVSubmissions(request):
 @api_view(['GET'])
 def getAllContactRequests(request):
     token = request.headers.get('TOKEN')
-    tempCheck = Token.objects.get(key=token)
-    if not tempCheck:
+    tempCheck = Token.objects.filter(key=token)
+    if len(tempCheck) == 0:
         return JsonResponse(returnFailureResponse('gatAllContactRequests','Not authenticated!'))
-
+    tempCheck = tempCheck[0]
     user = tempCheck.user
     if not user.is_superuser:
         return JsonResponse(returnFailureResponse('gatAllContactRequests','Not authenticated!'))
@@ -204,7 +204,7 @@ def signInMainAdmin(request):
     if not tempCheck.is_superuser:
         return JsonResponse(returnFailureResponse('signedIn',"Not authenticated"))
     token = Token.objects.get(user=tempCheck).key
-    # login(request,tempCheck)
+    
     return JsonResponse({
         'success':True,
         'token':token
@@ -217,9 +217,10 @@ def testRequestForOnlyAdmins(request):
     token = request.headers.get('TOKEN')
     
 
-    tempCheck = Token.objects.get(key=token)
-    if not tempCheck:
+    tempCheck = Token.objects.filter(key=token)
+    if len(tempCheck) == 0:
         return returnFailureResponse('accessGiven','Not authenticated')
+    tempCheck = tempCheck[0]
     user = tempCheck.user
 
     if not user.is_superuser:
