@@ -132,12 +132,12 @@ def signInMainAdmin(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
     tempCheck = authenticate(username=username,password=password)
-    if not  tempCheck.is_valid():
+    if not  tempCheck:
         return JsonResponse(returnFailureResponse('signedIn','Invalid Credentials'))
     if not tempCheck.is_superuser:
         return JsonResponse(returnFailureResponse('signedIn',"Not authenticated"))
     token = Token.objects.get(user=tempCheck).key
-    login(request,tempCheck)
+    # login(request,tempCheck)
     return JsonResponse({
         'success':True,
         'token':token
@@ -146,12 +146,15 @@ def signInMainAdmin(request):
 
 @api_view(['GET'])
 def testRequestForOnlyAdmins(request):
+
     token = request.headers.get('TOKEN')
-    print(token)
+    
+
     tempCheck = Token.objects.get(key=token)
     if not tempCheck:
         return returnFailureResponse('accessGiven','Not authenticated')
     user = tempCheck.user
+
     if not user.is_superuser:
         return returnFailureResponse('accessGiven','Not enough permissions')
 
