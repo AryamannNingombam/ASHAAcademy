@@ -132,7 +132,7 @@ def signInMainAdmin(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
     tempCheck = authenticate(username=username,password=password)
-    if not  tempCheck.is_valid():
+    if not  tempCheck:
         return JsonResponse(returnFailureResponse('signedIn','Invalid Credentials'))
     if not tempCheck.is_superuser:
         return JsonResponse(returnFailureResponse('signedIn',"Not authenticated"))
