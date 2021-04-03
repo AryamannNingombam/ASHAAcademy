@@ -110,11 +110,12 @@ def postCVForm(request):
             'error' : e
         })
 
-@api_view(['POST'])
+@api_view(['GET','POST'])
 def signOutMainAdmin(request):
     token = request.POST.get('TOKEN')
     tempCheck = Token.objects.filter(key=token)
     if len(tempCheck) == 0:
+        print("INVALIDINVALIDINVALIDINVALIDINVALIDINVALID")
         return JsonResponse(returnFailureResponse('loggedOut',"INVALID"))
     tempCheck = tempCheck[0]
     user = tempCheck.user
@@ -194,15 +195,18 @@ def getAllContactRequests(request):
     return JsonResponse(finalResult)
 
 
-@api_view(['POST'])
+@api_view(['GET','POST'])
 def signInMainAdmin(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
     tempCheck = authenticate(username=username,password=password)
     if not  tempCheck:
+
         return JsonResponse(returnFailureResponse('signedIn','Invalid Credentials'))
     if not tempCheck.is_superuser:
+        print("NOT SUPERUSER!")
         return JsonResponse(returnFailureResponse('signedIn',"Not authenticated"))
+    print("SUPERUSER!!")
     token = Token.objects.get(user=tempCheck).key
     
     return JsonResponse({
@@ -219,12 +223,12 @@ def testRequestForOnlyAdmins(request):
 
     tempCheck = Token.objects.filter(key=token)
     if len(tempCheck) == 0:
-        return returnFailureResponse('accessGiven','Not authenticated')
+        return JsonResponse(returnFailureResponse('accessGiven','Not authenticated'))
     tempCheck = tempCheck[0]
     user = tempCheck.user
 
     if not user.is_superuser:
-        return returnFailureResponse('accessGiven','Not enough permissions')
+        return JsonResponse(returnFailureResponse('accessGiven','Not enough permissions'))
 
     return JsonResponse({
         'success': True,
