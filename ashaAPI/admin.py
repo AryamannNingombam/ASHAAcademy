@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CarouselImage,ContactRequest,CVSubmission,Subject
+from .models import CarouselImage,ContactRequest,CVSubmission,Subject,Notification
 # Register your models here.
 admin.site.register((CarouselImage,Subject))
 
@@ -14,7 +14,7 @@ class CVSubmissionAdmin(admin.ModelAdmin):
 admin.site.register(ContactRequest,ContactRequestAdmin)
 
 admin.site.register(CVSubmission,CVSubmissionAdmin)
-
+admin.site.register(Notification)
 # @admin.register(TeacherCard)
 # class DescriptionAdminMCE(admin.ModelAdmin):
 #     list_display = ('name','facultySubject','isInManagement')

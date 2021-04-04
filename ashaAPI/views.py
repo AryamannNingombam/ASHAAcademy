@@ -1,4 +1,4 @@
-from .models import CarouselImage,Subject,CVSubmission,ContactRequest
+from .models import CarouselImage, Notification,Subject,CVSubmission,ContactRequest
 from .serializers import CVFormSerializer, ContactFormSerializer, SubjectSerializer
 from django.http import JsonResponse
 from rest_framework.authtoken.models import Token
@@ -234,3 +234,38 @@ def testRequestForOnlyAdmins(request):
         'success': True,
         'authenticated': True,
     })
+
+
+
+@api_view(['GET'])
+def getAllNotifications(request):
+    token = request.headers.get('TOKEN')
+    if not token:
+        return JsonResponse(returnFailureResponse('gettingNotifications','Unauthorized'))
+    tempCheck = Token.objects.filter(key=token)
+    if len(tempCheck) == 0:
+        return JsonResponse(returnFailureResponse('gettingNotifications','Unauthorized'))
+    tempCheck = tempCheck[0]
+
+    
+    allNotifications = Notification.objects.all()
+    print("CALLED")
+    finalResult = {
+        'success':True,
+        'allNotifications' : []
+    } 
+    for notification in allNotifications:
+
+        finalResult['allNotifications'].append({
+            'title' : notification.title,
+'date' : notification.date.date(),
+'time' : notification.date.time(),
+'description' : notification.description,
+        })   
+
+    return JsonResponse(finalResult)
+
+
+
+
+
