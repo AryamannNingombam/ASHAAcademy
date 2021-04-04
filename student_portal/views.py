@@ -2,17 +2,12 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from .models import StudentData, QuestionPaper
 from ashaAPI.models import Subject
+from shared.requestRejectedFunction import returnRequestRejectedJson
 from django.contrib.auth import login, logout, authenticate
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 
 
-def returnFailureResponse(string1,string2):
-    return {
-        'success': False,
-        string1: False,
-        'error': string2,
-    }
 
 @api_view(['POST'])
 def signInRequest(request):
@@ -22,13 +17,13 @@ def signInRequest(request):
     tempCheck = authenticate(username=username, password=password)
 
     if (not tempCheck):
-        return JsonResponse(returnFailureResponse('signedIn', "Invalid credentials"))
+        return returnRequestRejectedJson()
 
     else:
   
         userData = StudentData.objects.get(teacherUserModel=tempCheck)
         if not userData.isStudent:
-            return JsonResponse(returnFailureResponse('signedIn', "Student only portal"))
+            return returnRequestRejectedJson()
         token = Token.objects.get(user=tempCheck).key
         result = {
             'success': True,
@@ -59,12 +54,12 @@ def signOutRequest(request):
         token = request.POST.get('TOKEN')
         tempCheck = Token.objects.filter(key=token)
         if len(tempCheck) == 0:
-            return JsonResponse(returnFailureResponse('signedOut',"INVALID_TOKEN"))
+            return returnRequestRejectedJson()
         tempCheck = tempCheck[0]
         user = tempCheck.user
         studentData = StudentData.objects.get(studentUserModel=user)
         if not studentData.isStudent:
-            return JsonResponse(returnFailureResponse('signedOut','ONLY_STUDENTS_TO_SIGN_OUT'))
+            return returnRequestRejectedJson()
 
         
         return JsonResponse({
@@ -74,7 +69,7 @@ def signOutRequest(request):
         })
 
     except Exception as e:
-        return JsonResponse(returnFailureResponse(e))
+        return returnRequestRejectedJson()
 
 
 
@@ -86,20 +81,20 @@ def deleteStudentData(request):
         token = request.POST.get('TOKEN')
         tempCheck = Token.objects.filter(key=token)
         if len(tempCheck) == 0:
-            return JsonResponse(returnFailureResponse('studentDeleted', "Invalid Credentials"))
+            return returnRequestRejectedJson()
         tempCheck = tempCheck[0]
         user = tempCheck.user
         if not user.is_superuser:
-            return JsonResponse(returnFailureResponse('studentDeleted', "Not authenticated"))
+            return returnRequestRejectedJson()
         username = request.POST.get('username')
         studentUserToDelete = User.objects.filter(username=username)
         if len(studentUserToDelete) == 0:
-            return JsonResponse(returnFailureResponse('studentDeleted', "Student does not exist"))
+            return returnRequestRejectedJson()
         
         studentUserToDelete = studentUserToDelete[0]
         studentData = StudentData.objects.get(studentUserModel=studentUserToDelete)
         if not studentData.isStudent:
-            return JsonResponse(returnFailureResponse('studentDeleted', 'Student deletion only allowed'))
+            return returnRequestRejectedJson()
 
         studentData.delete()
         studentUserToDelete.delete()
@@ -111,7 +106,7 @@ def deleteStudentData(request):
 
     except Exception as e:
 
-        return JsonResponse(returnFailureResponse('studentDeleted',e))
+        return returnRequestRejectedJson()
 
 
 @api_view(['POST'])
@@ -120,11 +115,11 @@ def addNewStudent(request):
         token = request.POST.get('TOKEN')
         tempCheck = Token.objects.filter(key=token)
         if len(tempCheck) ==0:
-            return JsonResponse(returnFailureResponse('studentAdded', "Invalid Credentials"))
+            return returnRequestRejectedJson()
         tempCheck = tempCheck[0]
         user = tempCheck.user
         if not user.is_superuser:
-            return JsonResponse(returnFailureResponse('studentAdded',  "Not authenticated"))
+            return returnRequestRejectedJson()
         username = request.POST.get('username')
         password = request.POST.get('password')
         email = request.POST.get('email')
@@ -166,7 +161,7 @@ def addNewStudent(request):
 
 
     except Exception as e:
-        return JsonResponse(returnFailureResponse('studentAdded', "Not authenticated"))
+        return returnRequestRejectedJson()
 
 
 
@@ -179,11 +174,11 @@ def updateTeacherData(request):
         token =  request.POST.get('TOKEN')
         tempCheck = Token.objects.filter(key=token)
         if len(tempCheck) == 0:
-            return JsonResponse(returnFailureResponse('teacherDetailsUpdated',"Invalid Credentials"))
+            return returnRequestRejectedJson()
         tempCheck = tempCheck[0]
         user = tempCheck.user
         if not user.is_superuser:
-            return JsonResponse(returnFailureResponse('teacherDetailsUpdated', "Not authenticated"))
+            return returnRequestRejectedJson()
         username = request.POST.get('username')
         password = request.POST.get('password')
         email = request.POST.get('email')
@@ -223,7 +218,7 @@ def updateTeacherData(request):
 
 
     except Exception as e:
-        return JsonResponse(returnFailureResponse('studentDetailsUpdated',e))
+        return returnRequestRejectedJson()
 
 
 
@@ -236,11 +231,11 @@ def uploadQuestionPaper(request):
     token = request.POST.get('TOKEN')
     tempCheck = Token.objects.filter(key=token)
     if len(tempCheck) == 0:
-        return returnFailureResponse('questionPaperUploaded','Not authenticated')
+        return returnRequestRejectedJson()
     tempCheck = tempCheck[0]
     user = tempCheck.user
     if not user.is_superuser:
-        return returnFailureResponse('questionPaperUploaded',"Don't have enough permissions")
+        return returnRequestRejectedJson()
     classFor = request.POST.get('classFor')
     subjectFor = Subject.objects.get(name=request.POST.get('subjectFor'))
     paperPDF = request.FILES.get('paperPDF')

@@ -8,16 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout,login,authenticate
 from django.conf import settings
 from django.core.mail import send_mail
-
-
-
-def returnFailureResponse(string1,string2):
-    return {
-        'success': False,
-        string1: False,
-        'error': string2,
-    }
-
+from shared.requestRejectedFunction import returnRequestRejectedJson
 
 
 @api_view(['GET'])
@@ -105,22 +96,19 @@ def postCVForm(request):
          'success' : True,
      })  
     except Exception as e:
-        return JsonResponse({
-            'success' : False,
-            'error' : e
-        })
+        return returnRequestRejectedJson()
 
 @api_view(['GET','POST'])
 def signOutMainAdmin(request):
     token = request.POST.get('TOKEN')
     tempCheck = Token.objects.filter(key=token)
     if len(tempCheck) == 0:
-        print("INVALIDINVALIDINVALIDINVALIDINVALIDINVALID")
-        return JsonResponse(returnFailureResponse('loggedOut',"INVALID"))
+        
+        return returnRequestRejectedJson()
     tempCheck = tempCheck[0]
     user = tempCheck.user
     if not user.is_superuser:
-        return JsonResponse(returnFailureResponse('loggedOut',"NON_SUPERUSER"))
+        return returnRequestRejectedJson()
     
     return JsonResponse({
         'success': True,
@@ -139,11 +127,11 @@ def getAllCVSubmissions(request):
     token = request.headers.get('TOKEN')
     tempCheck = Token.objects.filter(key=token)
     if len(tempCheck) == 0:
-        return JsonResponse(returnFailureResponse('gatAllContactRequests','Not authenticated!'))
+        return returnRequestRejectedJson()
     tempCheck  = tempCheck[0]
     user = tempCheck.user
     if not user.is_superuser:
-        return JsonResponse(returnFailureResponse('gatAllContactRequests','Not authenticated!'))
+        return returnRequestRejectedJson()
 
     #all tests passed
     allCVSubmissions = CVSubmission.objects.all()
@@ -172,11 +160,11 @@ def getAllContactRequests(request):
     token = request.headers.get('TOKEN')
     tempCheck = Token.objects.filter(key=token)
     if len(tempCheck) == 0:
-        return JsonResponse(returnFailureResponse('gatAllContactRequests','Not authenticated!'))
+        return returnRequestRejectedJson()
     tempCheck = tempCheck[0]
     user = tempCheck.user
     if not user.is_superuser:
-        return JsonResponse(returnFailureResponse('gatAllContactRequests','Not authenticated!'))
+        return returnRequestRejectedJson()
 
     #all tests passed
     allContactRequests = ContactRequest.objects.all()
@@ -202,10 +190,10 @@ def signInMainAdmin(request):
     tempCheck = authenticate(username=username,password=password)
     if not  tempCheck:
 
-        return JsonResponse(returnFailureResponse('signedIn','Invalid Credentials'))
+        return returnRequestRejectedJson()
     if not tempCheck.is_superuser:
         print("NOT SUPERUSER!")
-        return JsonResponse(returnFailureResponse('signedIn',"Not authenticated"))
+        return returnRequestRejectedJson()
     print("SUPERUSER!!")
     token = Token.objects.get(user=tempCheck).key
     
@@ -223,12 +211,12 @@ def testRequestForOnlyAdmins(request):
 
     tempCheck = Token.objects.filter(key=token)
     if len(tempCheck) == 0:
-        return JsonResponse(returnFailureResponse('accessGiven','Not authenticated'))
+        return returnRequestRejectedJson()
     tempCheck = tempCheck[0]
     user = tempCheck.user
 
     if not user.is_superuser:
-        return JsonResponse(returnFailureResponse('accessGiven','Not enough permissions'))
+        return returnRequestRejectedJson()
 
     return JsonResponse({
         'success': True,
@@ -241,10 +229,10 @@ def testRequestForOnlyAdmins(request):
 def getAllNotifications(request):
     token = request.headers.get('TOKEN')
     if not token:
-        return JsonResponse(returnFailureResponse('gettingNotifications','Unauthorized'))
+        return returnRequestRejectedJson()
     tempCheck = Token.objects.filter(key=token)
     if len(tempCheck) == 0:
-        return JsonResponse(returnFailureResponse('gettingNotifications','Unauthorized'))
+        return returnRequestRejectedJson()
     tempCheck = tempCheck[0]
 
     
