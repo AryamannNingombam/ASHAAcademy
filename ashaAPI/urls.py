@@ -30,5 +30,7 @@ urlpatterns = [
     path('testApiForOnlyAdmins/',views.testRequestForOnlyAdmins,name='testRequestForOnlyAdmins'),
     path('getAllContactRequests/',views.getAllContactRequests,name='getAllContactRequests'),
     path('getAllCVSubmissions/',views.getAllCVSubmissions,name='getAllCVSubmissions'),
-    path('getAllNotifications/',views.getAllNotifications,name='getAllNotifications')
+    path('getAllNotifications/',views.getAllNotifications,name='getAllNotifications'),
+    path('postNewNotification/',views.addNotification,name='postNewNotification')
+
 ]

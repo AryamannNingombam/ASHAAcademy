@@ -257,3 +257,26 @@ def getAllNotifications(request):
 
 
 
+
+
+@api_view(['POST'])
+def addNotification(request):
+    token = request.headers.get('TOKEN')
+    if not token:
+        return returnRequestRejectedJson()
+
+    tempCheck = Token.objects.filter(key=token)
+    if len(tempCheck) == 0:
+        return returnRequestRejectedJson()
+    tempCheck = tempCheck[0]
+    if not tempCheck.user.is_superuser:
+        return returnRequestRejectedJson()
+    title =request.POST.get('title')
+    description = request.POST.get('description')
+    newNotification = Notification(title=title,description=description)
+    newNotification.save()
+    return JsonResponse({
+        'success':True,
+        'notificationAdded':True,
+    })
+
