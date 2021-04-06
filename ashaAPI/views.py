@@ -262,6 +262,7 @@ def getAllNotifications(request):
 @api_view(['POST'])
 def addNotification(request):
     token = request.headers.get('TOKEN')
+    print(f'TOKEN : {token}')
     if not token:
         return returnRequestRejectedJson()
 
@@ -271,9 +272,9 @@ def addNotification(request):
     tempCheck = tempCheck[0]
     if not tempCheck.user.is_superuser:
         return returnRequestRejectedJson()
-    title =request.POST.get('title')
-    description = request.POST.get('description')
-    print(request.POST)
+    title =request.headers.get('title')
+    description = request.headers.get('description')
+
     print(title)
     print(description)
     newNotification = Notification(title=title,description=description)
