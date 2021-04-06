@@ -61,7 +61,7 @@ REST_FRAMEWORK = {
 #     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 # ]
 MIDDLEWARE = [
-    # 'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -105,15 +105,15 @@ WSGI_APPLICATION = 'ASHAAcademy.wsgi.application'
 
 # ]
 
-# ALLOWED_HOSTS=['http://localhost:3000',
-# '127.0.0.1'
-# ]
+ALLOWED_HOSTS=['localhost',
+'127.0.0.1'
+]
 # CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ORIGIN_WHITELIST = (
 #        'http://localhost:3000',
 #        '127.0.0.1'
 # )
-ALLOWED_HOSTS = []
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

@@ -50,9 +50,9 @@ class CVSubmission(models.Model):
 
 class Notification(models.Model):
     sno = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=50,blank=False,null=False,default='')
+    title = models.CharField(max_length=50,blank=False,default='',null=True)
     date = models.DateTimeField(default=datetime.now, blank=False,null=True)
-    description = models.TextField(blank=False,null=True,default=True)
+    description = models.TextField(blank=False,null=False,default='')
 
     def __str__(self):
         return self.title

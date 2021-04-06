@@ -98,7 +98,7 @@ def postCVForm(request):
     except Exception as e:
         return returnRequestRejectedJson()
 
-@api_view(['GET','POST'])
+@api_view(['POST'])
 def signOutMainAdmin(request):
     token = request.POST.get('TOKEN')
     tempCheck = Token.objects.filter(key=token)
@@ -183,7 +183,7 @@ def getAllContactRequests(request):
     return JsonResponse(finalResult)
 
 
-@api_view(['GET','POST'])
+@api_view(['POST'])
 def signInMainAdmin(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
@@ -273,6 +273,9 @@ def addNotification(request):
         return returnRequestRejectedJson()
     title =request.POST.get('title')
     description = request.POST.get('description')
+    print(request.POST)
+    print(title)
+    print(description)
     newNotification = Notification(title=title,description=description)
     newNotification.save()
     return JsonResponse({
