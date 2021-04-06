@@ -284,3 +284,4 @@ def addNotification(request):
         'notificationAdded':True,
     })
 
+

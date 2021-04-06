@@ -1,12 +1,12 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-from .models import StudentData, QuestionPaper
+from .models import StudentData, QuestionPaper,Marksheet
 from ashaAPI.models import Subject
 from shared.requestRejectedFunction import returnRequestRejectedJson
 from django.contrib.auth import login, logout, authenticate
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-
+from teacher_api.models import TeacherData
 
 
 @api_view(['POST'])
@@ -195,12 +195,6 @@ def updateTeacherData(request):
         user.last_name = lastName
         user.password = password
         user.email = email
-
-
-
-
-
-
         user.save()
         newStudentData = StudentData.objects.get(studentUserModel=user)
         newStudentData.classStudyingIn = classStudyingIn
@@ -221,9 +215,63 @@ def updateTeacherData(request):
         return returnRequestRejectedJson()
 
 
+@api_view(['GET'])
+def getAllQuestionPapers(request):
+    try:
+        token = request.headers.token
+        tempCheck = Token.objects.filter(key=token)
+        if not tempCheck:
+            return returnRequestRejectedJson()
+        finalResult = {
+        'success':True,
+        'allQuestionPapers' : []
+        }
+        allQuestionPapers = QuestionPaper.objects.all()
+        for questionPaper in allQuestionPapers:
+            finalResult['allQuestionPapers'].append({
+            
+            'classFor' : questionPaper.classFor,
+            'paperPDF' : questionPaper.paperPDF.url,
+            "subjectFor" : questionPaper.subjectFor.name
+            })
+
+        return JsonResponse(finalResult)
+        
+    except Exception as e:
+        return returnRequestRejectedJson()
+        
 
 
 
+@api_view(['GET'])
+def getAllMarksheets(request):
+    token = request.headers.token
+    tempCheck = Token.objects.filter(key=token)
+    if not tempCheck:
+        return returnRequestRejectedJson()
+    student = StudentData.objects.filter(studentUserModel=tempCheck.user)
+    if len(student) == 0:
+        return returnRequestRejectedJson()
+    student = student[0]
+    allMarksheets = Marksheet.objects.filter(writtenBy=student)
+    finalResult = {
+    'success':True,
+    'allMarksheets' : []
+    }
+    for marksheet in allMarksheets:
+        finalResult['allMarksheets'].append({
+
+
+        'checkedBy' : marksheet.checkedBy.teacherUserModel.username ,
+        'subject' : marksheet.subject.name ,
+        'totalMarks' : marksheet.totalMarks ,
+        'obtainedMarks' : marksheet.obtainedMarks ,
+
+
+        'marksheetPDF' : marksheet.marksheetPDF.url ,
+        'questionPaper' : marksheet.questionPaper.paperPDF.url ,
+        })
+    return JsonResponse(finalResult)
 
 
 @api_view(['POST'])
@@ -246,3 +294,38 @@ def uploadQuestionPaper(request):
         'paperUploaded': True,
     })
 
+
+@api_view(['POST'])
+def uploadMarksheet(request):
+    try:
+        token = request.POST.get('TOKEN')
+            tempCheck = Token.objects.filter(key=token)
+            if len(tempCheck) == 0:
+                return returnRequestRejectedJson()
+            tempCheck = tempCheck[0]
+            teacher = tempCheck.user
+            studentToken = request.POST.get('studentToken')
+            if not studentToken:
+                return returnRequestRejectedJson()
+            tempCheck = Token.objects.filter(studenToken)
+            if len(tempCheck) == 0:
+                return returnRequestRejectedJson()
+            tempCheck = tempCheck[0]
+            student = StudentData.objects.get(studentUserModel=tempCheck.user)
+            subjectName = request.POST.get('subject')
+            newMarksheet = Marksheet(writtenBy=student,
+            checkedBy=TeacherData.objects.get(teacherUserModel=teacher),
+            subject = Subject.objects.get(name=subjectName),
+                totalMarks=request.POST.get('totalMarks'),
+                obtainedMarks=request.POST.get('obtainedMarks'),
+                marksheetPDF=request.FILES.get('marksheetPDF'),
+            questionPaper=QuestionPaper.objects.get(sno=request.POST.get('questionPaperSNO')
+            )
+
+            newMarksheet.save()
+            return JsonResponse({
+                'success': True,
+                'marksheetUploaded': True,
+            })
+    except Exception as e:
+        return returnRequestRejectedJson()
