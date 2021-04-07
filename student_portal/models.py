@@ -4,7 +4,7 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from ashaAPI.models import Subject
 from teacher_portal.models import TeacherData
-
+from datetime import datetime
 class StudentData(models.Model):
     sno = models.AutoField(primary_key=True)
     studentUserModel = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -16,7 +16,7 @@ class StudentData(models.Model):
     isTeacher = models.BooleanField(default=False, blank=False, null=True)
     isStudent = models.BooleanField(default=True, blank=False, null=True)
     attendancePercentage = models.IntegerField(default=100)
-
+    hasPayedFees = models.BooleanField(default=True,null=True,blank=True)
 
 def uploadToCallback(instance,filename):
     return f'StudentMarksheets/{instance.writtenBy.studentUserModel.username}/{instance.subject}/{filename}'
@@ -25,6 +25,8 @@ def uploadToCallback(instance,filename):
 def uploadToCallbackQuestionPaper(instance,filename):
     return f'QuestionPapers/{instance.subjectFor.name}/{filename}'
 
+def uploadToCallBackReceipt(instance,filename):
+    return f'Payments/{instance.payer.classStudyingIn}/{instance.payer.studentID}/{filename}'
 
 class QuestionPaper(models.Model):
     sno = models.AutoField(primary_key=True)
@@ -47,7 +49,12 @@ class Marksheet(models.Model):
 
 
 
-
+class StudentPaymentDetails(models.Model):
+    sno = models.AutoField(primary_key=True)
+    dateAndTimePaid = models.DateTimeField(default=datetime.now, blank=False,null=True)
+    payer = models.ForeignKey(StudentData,on_delete=models.CASCADE,null=False)
+    receipt = models.FileField(upload_to=uploadToCallBackReceipt)
+ 
 
 @receiver(post_delete, sender=StudentData)
 def submission_delete(sender, instance, **kwargs):

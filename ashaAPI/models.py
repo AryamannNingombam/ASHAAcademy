@@ -33,6 +33,7 @@ class ContactRequest(models.Model):
 
 
 
+
 class CVSubmission(models.Model):
     sno = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100,blank=False,default='')
