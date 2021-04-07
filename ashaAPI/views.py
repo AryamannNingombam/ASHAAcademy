@@ -203,7 +203,7 @@ def signInMainAdmin(request):
     })
 
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def testRequestForOnlyAdmins(request):
 
     token = request.headers.get('TOKEN')
@@ -225,9 +225,10 @@ def testRequestForOnlyAdmins(request):
 
 
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def getAllNotifications(request):
-    token = request.headers.get('TOKEN')
+    token = request.POST.get('TOKEN')
+    print("Request made!!")
     if not token:
         return returnRequestRejectedJson()
     tempCheck = Token.objects.filter(key=token)
@@ -261,7 +262,8 @@ def getAllNotifications(request):
 
 @api_view(['POST'])
 def addNotification(request):
-    token = request.headers.get('TOKEN')
+    print(request.POST)
+    token = request.POST.get('TOKEN')
     print(f'TOKEN : {token}')
     if not token:
         return returnRequestRejectedJson()
@@ -272,8 +274,8 @@ def addNotification(request):
     tempCheck = tempCheck[0]
     if not tempCheck.user.is_superuser:
         return returnRequestRejectedJson()
-    title =request.headers.get('title')
-    description = request.headers.get('description')
+    title =request.POST.get('title')
+    description = request.POST.get('description')
 
     print(title)
     print(description)

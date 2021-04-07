@@ -105,14 +105,15 @@ WSGI_APPLICATION = 'ASHAAcademy.wsgi.application'
 
 # ]
 
-ALLOWED_HOSTS=['localhost',
-'127.0.0.1'
-]
-# CORS_ORIGIN_ALLOW_ALL = True
+# ALLOWED_HOSTS=['localhost',
+# '127.0.0.1'
+# ]
+CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ORIGIN_WHITELIST = (
 #        'http://localhost:3000',
 #        '127.0.0.1'
 # )
+ALLOWED_HOSTS=['*']
 
 DATABASES = {
     'default': {
