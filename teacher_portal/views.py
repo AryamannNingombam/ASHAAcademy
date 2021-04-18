@@ -20,10 +20,11 @@ def signInRequest(request):
 
     username = request.POST.get('username')
     password = request.POST.get('password')
-   
+    print(username)
+    print(password)
         
     tempCheck = authenticate(username=username,password=password)
-    
+    print(tempCheck)
     if (not tempCheck):
         return returnRequestRejectedJson()
     else:
