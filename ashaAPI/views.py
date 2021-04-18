@@ -122,9 +122,9 @@ def signOutMainAdmin(request):
 
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def getAllCVSubmissions(request):
-    token = request.headers.get('TOKEN')
+    token = request.POST.get('TOKEN')
     tempCheck = Token.objects.filter(key=token)
     if len(tempCheck) == 0:
         return returnRequestRejectedJson()
@@ -155,9 +155,9 @@ def getAllCVSubmissions(request):
 
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def getAllContactRequests(request):
-    token = request.headers.get('TOKEN')
+    token = request.POST.get('TOKEN')
     tempCheck = Token.objects.filter(key=token)
     if len(tempCheck) == 0:
         return returnRequestRejectedJson()
