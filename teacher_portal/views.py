@@ -33,6 +33,7 @@ def signInRequest(request):
         token = Token.objects.get(user=tempCheck).key
         result = {
                 'success': True,
+                'role' : "TEACHER",
                 'userDetail': {
                     "username": username,
                     'token': token,

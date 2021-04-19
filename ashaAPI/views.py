@@ -199,7 +199,8 @@ def signInMainAdmin(request):
     
     return JsonResponse({
         'success':True,
-        'token':token
+        'token':token,
+        'role' : "ADMIN"
     })
 
 
