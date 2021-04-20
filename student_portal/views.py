@@ -299,7 +299,7 @@ def uploadQuestionPaper(request):
 @api_view(['POST'])
 def uploadMarksheet(request):
     try:
-        token = request.POST.get('TOKEN')
+            token = request.POST.get('TOKEN')
             tempCheck = Token.objects.filter(key=token)
             if len(tempCheck) == 0:
                 return returnRequestRejectedJson()

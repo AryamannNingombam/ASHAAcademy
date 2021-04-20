@@ -30,7 +30,9 @@ urlpatterns = [
 
     path('api/',include('ashaAPI.urls')),
     path('rest-auth/', include('rest_auth.urls')),
-    path('teacher-api/',include('teacher_portal.urls'))
+    path('teacher-api/',include('teacher_portal.urls')),
+    path('student-api/',include('student_portal.urls'))
+
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
