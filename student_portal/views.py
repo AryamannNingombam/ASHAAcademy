@@ -6,7 +6,7 @@ from shared.requestRejectedFunction import returnRequestRejectedJson
 from django.contrib.auth import login, logout, authenticate
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-from teacher_api.models import TeacherData
+from teacher_portal.models import TeacherData
 
 
 @api_view(['POST'])
@@ -308,7 +308,7 @@ def uploadMarksheet(request):
             studentToken = request.POST.get('studentToken')
             if not studentToken:
                 return returnRequestRejectedJson()
-            tempCheck = Token.objects.filter(studenToken)
+            tempCheck = Token.objects.filter(studentToken)
             if len(tempCheck) == 0:
                 return returnRequestRejectedJson()
             tempCheck = tempCheck[0]
@@ -321,12 +321,12 @@ def uploadMarksheet(request):
                 obtainedMarks=request.POST.get('obtainedMarks'),
                 marksheetPDF=request.FILES.get('marksheetPDF'),
             questionPaper=QuestionPaper.objects.get(sno=request.POST.get('questionPaperSNO')
-            )
+            ))
 
             newMarksheet.save()
             return JsonResponse({
                 'success': True,
                 'marksheetUploaded': True,
-            })
+            })     
     except Exception as e:
         return returnRequestRejectedJson()
