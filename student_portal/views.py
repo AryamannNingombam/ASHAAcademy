@@ -13,38 +13,44 @@ from teacher_portal.models import TeacherData
 def signInRequest(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
-
-    tempCheck = authenticate(username=username, password=password)
-
+   
+    tempCheck =  authenticate(username=username, password=password)
+    
     if (not tempCheck):
         return returnRequestRejectedJson()
 
     else:
-  
-        userData = StudentData.objects.get(teacherUserModel=tempCheck)
-        if not userData.isStudent:
-            return returnRequestRejectedJson()
-        token = Token.objects.get(user=tempCheck).key
-        result = {
-            'success': True,
-            'role' : "STUDENT",
-            'userDetail': {
-                'username': username,
-                'token': token,
-                'firstName': userData.studentUserModel.first_name,
-                'lastName': userData.studentUserModel.last_name,
-                'email': userData.studentUserModel.email,
-                'classStudyingIn': userData.classStudyingIn,
-                'studentID': userData.studentID,
-                'parentName': userData.parentName,
-                'studentImage': userData.studentImage,
-                'parentPhoneNumber': userData.parentPhoneNumber
+        try:
+            userData = StudentData.objects.get(studentUserModel=tempCheck)
+     
+            if not userData.isStudent:
+                return returnRequestRejectedJson()
+            token = Token.objects.get(user=tempCheck).key
+            
+            result = {
+                'success': True,
+                'role' : "STUDENT",
+                   'token': token,
+                'userDetail': {
+                    'username': username,
+                 
+                    'firstName': userData.studentUserModel.first_name,
+                    'lastName': userData.studentUserModel.last_name,
+                    'email': userData.studentUserModel.email,
+                    'classStudyingIn': userData.classStudyingIn,
+                    'studentID': userData.studentID,
+                    'parentName': userData.parentName,
+                    'studentImage': userData.studentImage.url,
+                    'parentPhoneNumber': userData.parentPhoneNumber
 
+
+                }
 
             }
-
-        }
-        return JsonResponse(result)
+            return JsonResponse(result)
+        except Exception as e:
+            print(e)
+            return returnRequestRejectedJson()
 
 
 @api_view(['POST'])
