@@ -21,7 +21,7 @@ def signInRequest(request):
 
     else:
   
-        userData = StudentData.objects.get(teacherUserModel=tempCheck)
+        userData = StudentData.objects.get(studentUserModel=tempCheck)
         if not userData.isStudent:
             return returnRequestRejectedJson()
         token = Token.objects.get(user=tempCheck).key
@@ -37,7 +37,7 @@ def signInRequest(request):
                 'classStudyingIn': userData.classStudyingIn,
                 'studentID': userData.studentID,
                 'parentName': userData.parentName,
-                'studentImage': userData.studentImage,
+                'studentImage': userData.studentImage.url,
                 'parentPhoneNumber': userData.parentPhoneNumber
 
 
