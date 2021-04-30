@@ -34,9 +34,10 @@ def signInRequest(request):
         result = {
                 'success': True,
                 'role' : "TEACHER",
+                   'token': token,
                 'userDetail': {
                     "username": username,
-                    'token': token,
+                 
                     'teacherImage': userData.teacherImage.url,
                     'qualifications': userData.qualifications,
                     'teacherID': userData.teacherID,
