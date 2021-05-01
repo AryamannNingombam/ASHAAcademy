@@ -303,6 +303,36 @@ def uploadQuestionPaper(request):
 
 
 @api_view(['POST'])
+def changePassword(request):
+    try:
+        token = request.POST.get('TOKEN')
+        oldPassword = request.POST.get('oldPassoword')
+        newPassword = request.POST.get('newPassword')
+
+        testAuth = Token.objects.get(key=token)
+        if not testAuth:
+            return returnRequestRejectedJson()
+        userData = testAuth.user
+        if (userData.password == oldPassword):
+            print("Updating the password!")
+            userData.password = newPassword
+            userData.save()
+            return JsonResponse({'success':True,
+            userData : userData,
+            token:token
+            })
+
+        else:
+            return returnRequestRejectedJson()
+
+    except Exception as e:
+        print("Exception!")
+        return returnRequestRejectedJson()
+
+
+
+
+@api_view(['POST'])
 def uploadMarksheet(request):
     try:
             token = request.POST.get('TOKEN')
