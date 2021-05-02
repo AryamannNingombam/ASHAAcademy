@@ -39,7 +39,7 @@ class CVSubmission(models.Model):
     name = models.CharField(max_length=100,blank=False,default='')
     email = models.EmailField(blank=False)
     phoneNumber = models.IntegerField(blank=False)
-    fileSubmission = models.FileField(blank=False,upload_to='CVSubmissions/')
+    fileSubmission = models.FileField(blank=False,null=False,upload_to='CVSubmissions/')
     message = models.TextField(blank=True,null=True,default='')
     subjectApplyingFor = models.ForeignKey(Subject,blank=False,null=False,on_delete=models.CASCADE)
 

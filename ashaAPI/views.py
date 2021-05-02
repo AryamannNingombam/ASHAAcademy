@@ -79,6 +79,13 @@ def getAllSubjects(request):
         finalResult['subjects'].append(subject.name)
     return JsonResponse(finalResult)
 
+
+def checkFileSize(file):
+    print("Function called!")
+    return not file.size > 5242880
+        
+
+
 @api_view(['POST'])
 def postCVForm(request):
     try:
@@ -87,15 +94,21 @@ def postCVForm(request):
         phoneNumber =request.POST.get('phoneNumber')
         fileSubmission = request.FILES.get('fileSubmission')
         message = request.POST.get('message')
-        print(request.POST.get('subjectApplyingFor'))
+        print(request.POST)
+        print(request.FILES)
         subjectApplyingFor = Subject.objects.get(name=request.POST.get('subjectApplyingFor'))
-        print(subjectApplyingFor)
+
+        if (not checkFileSize(fileSubmission)):
+            print("File too big!")
+            return returnRequestRejectedJson()
+        print("Test bypassed")
         newCVSubmission = CVSubmission(name=name,email=email,phoneNumber=phoneNumber,fileSubmission=fileSubmission,message=message,subjectApplyingFor=subjectApplyingFor)
         newCVSubmission.save()
         return JsonResponse({
          'success' : True,
      })  
     except Exception as e:
+        print(e)
         return returnRequestRejectedJson()
 
 @api_view(['POST'])
